@@ -147,6 +147,7 @@ class MonthFragment : Fragment() {
 //        var nextDayCount = 1
 
         var festivalIdx = 0
+        var nowDay = 1
         for (i in 1 until (calendarSize+1)) {
             if (i <= dayOfWeek ) {
                 dayList.add(null)
@@ -168,7 +169,9 @@ class MonthFragment : Fragment() {
                     val festivalDto = festivalList[i]
                     val festivalStartLocalDate = LocalDate.parse(festivalDto.fstvlStartDate, formatter);
                     val festivalEndLocalDate = LocalDate.parse(festivalDto.fstvlEndDate, formatter);
-                    if(festivalStartLocalDate.isBefore(date) && festivalEndLocalDate.isAfter(date)){
+
+                    val nowDayLocalDate = LocalDate.of(CalendarUtil.selectedDate.year,CalendarUtil.selectedDate.month,nowDay++)
+                    if(festivalStartLocalDate.isBefore(nowDayLocalDate) && festivalEndLocalDate.isAfter(nowDayLocalDate)){
                         count++
                     }
                     else{

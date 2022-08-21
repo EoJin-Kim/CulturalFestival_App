@@ -6,10 +6,7 @@
     android:orientation="vertical"
     tools:context=".fragment.tab.DayFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="day" />
-
+        android:layout_height="match_parent" />
 </LinearLayout>

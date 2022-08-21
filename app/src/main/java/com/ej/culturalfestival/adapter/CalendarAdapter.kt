@@ -4,16 +4,18 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.ej.culturalfestival.R
+import com.ej.culturalfestival.dto.FestivalDayInfo
 import java.time.LocalDate
 
 class CalendarAdapter(
 
-) : ListAdapter<LocalDate,CalendarAdapter.CalendarViewHolder>(CalendarDiffCallback){
+) : ListAdapter<FestivalDayInfo,CalendarAdapter.CalendarViewHolder>(CalendarDiffCallback){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CalendarViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -23,22 +25,24 @@ class CalendarAdapter(
     }
 
     override fun onBindViewHolder(holder: CalendarViewHolder, position: Int) {
-        val localDate = getItem(position)
-        holder.bind(localDate,position)
+        val festivalDayInfo = getItem(position)
+        holder.bind(festivalDayInfo,position)
     }
 
     class CalendarViewHolder(itemView : View): RecyclerView.ViewHolder(itemView){
         private val parentView : View  = itemView.findViewById(R.id.parent_view)
         private val dayText  : TextView = itemView.findViewById(R.id.day_text)
+        private val countBotton : Button = itemView.findViewById(R.id.day_count)
         init {
 
         }
 
-        fun bind(day : LocalDate?,position: Int){
-            if (day == null) {
+        fun bind(festivalDayInfo : FestivalDayInfo?,position: Int){
+            if (festivalDayInfo == null) {
                 this.dayText.text = ""
             } else {
-                this.dayText.text = "${day.dayOfMonth}"
+                this.dayText.text = "${festivalDayInfo.date.dayOfMonth}"
+                this.countBotton.text = "${festivalDayInfo.count}개"
             }
 
             // 토요일
@@ -54,12 +58,12 @@ class CalendarAdapter(
     }
 }
 
-object CalendarDiffCallback : DiffUtil.ItemCallback<LocalDate>(){
-    override fun areItemsTheSame(oldItem: LocalDate, newItem: LocalDate): Boolean {
+object CalendarDiffCallback : DiffUtil.ItemCallback<FestivalDayInfo>(){
+    override fun areItemsTheSame(oldItem: FestivalDayInfo, newItem: FestivalDayInfo): Boolean {
         return oldItem == newItem
     }
 
-    override fun areContentsTheSame(oldItem: LocalDate, newItem: LocalDate): Boolean {
+    override fun areContentsTheSame(oldItem: FestivalDayInfo, newItem: FestivalDayInfo): Boolean {
         return oldItem == newItem
     }
 }

@@ -18,8 +18,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         val toolbar = mainActivityBinding.toolbar
-        toolbar.title=""
-        toolbar.subtitle=""
+//        toolbar.title="문화 축제"
+//        toolbar.subtitle="문화 출제2"
         setSupportActionBar(toolbar)
 
 

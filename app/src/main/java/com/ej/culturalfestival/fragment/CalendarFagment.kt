@@ -11,6 +11,7 @@ import com.ej.culturalfestival.MainActivity
 import com.ej.culturalfestival.adapter.ViewPagerAdapter
 import com.ej.culturalfestival.databinding.FragmentCalendarBinding
 import com.ej.culturalfestival.util.CalendarUtil
+import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -42,6 +43,19 @@ class CalendarFagment : Fragment() {
         val viewPager = calendarFagmentBinding.viewpager2
         val tabLayout = calendarFagmentBinding.tabLayout
 
+        tabLayout.addOnTabSelectedListener(object :TabLayout.OnTabSelectedListener{
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                tab?.position?.let { viewPager.setCurrentItem(it,false) }
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+            }
+        })
+
         viewPager.adapter = ViewPagerAdapter(act.supportFragmentManager,lifecycle)
         viewPager.isUserInputEnabled =false
 
@@ -51,6 +65,9 @@ class CalendarFagment : Fragment() {
         TabLayoutMediator(tabLayout,viewPager){ tab,position ->
             tab.text = tabTitleArray[position]
         }.attach()
+
+        CalendarUtil.selectedDate = LocalDate.now()
+
 
         return calendarFagmentBinding.root
     }

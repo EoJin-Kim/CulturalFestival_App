@@ -73,7 +73,7 @@ class MonthFragment : Fragment() {
         }
         // 현재 날짜
 
-        CalendarUtil.selectedDate = LocalDate.now()
+
         val nowDate = CalendarUtil.selectedDate
         val festivalList = getFestivalList(nowDate)
         festivalList.observe(viewLifecycleOwner){

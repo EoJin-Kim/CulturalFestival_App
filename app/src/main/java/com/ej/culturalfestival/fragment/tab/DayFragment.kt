@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import com.ej.culturalfestival.R
 import com.ej.culturalfestival.databinding.FragmentDayBinding
 import com.ej.culturalfestival.fragment.CalendarFagment
+import com.ej.culturalfestival.util.CalendarUtil
+import java.time.LocalDate
 
 
 class DayFragment : Fragment() {
@@ -24,6 +26,8 @@ class DayFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         dayFragmentBinding = FragmentDayBinding.inflate(inflater,container,false)
+
+
         return dayFragmentBinding.root
     }
 

@@ -157,7 +157,7 @@ class MonthFragment : Fragment() {
 //                dayList.add(LocalDate.of(preLocalDate.year,preLocalDate.month,preMonthLastDay-preDayCount-- +1))
 
             }
-            else if( i > lastDay + dayOfWeek){
+            else if( i >= lastDay + dayOfWeek){
                 dayList.add(null)
 //                val nextMonth  = CalendarUtil.selectedDate.plusMonths(1);
 //                val nextLocalDate = YearMonth.from(nextMonth)
@@ -165,13 +165,17 @@ class MonthFragment : Fragment() {
             }
             else{
                 var count = 0
-                for (i in festivalIdx until festivalList.size){
-                    val festivalDto = festivalList[i]
+                for (idx in festivalIdx until festivalList.size){
+                    val festivalDto = festivalList[idx]
                     val festivalStartLocalDate = LocalDate.parse(festivalDto.fstvlStartDate, formatter);
                     val festivalEndLocalDate = LocalDate.parse(festivalDto.fstvlEndDate, formatter);
 
-                    val nowDayLocalDate = LocalDate.of(CalendarUtil.selectedDate.year,CalendarUtil.selectedDate.month,nowDay++)
-                    if(festivalStartLocalDate.isBefore(nowDayLocalDate) && festivalEndLocalDate.isAfter(nowDayLocalDate)){
+                    val nowDayLocalDate = LocalDate.of(CalendarUtil.selectedDate.year,CalendarUtil.selectedDate.month,nowDay)
+
+                    if(
+                        (festivalStartLocalDate.isBefore(nowDayLocalDate) || festivalStartLocalDate.isEqual(nowDayLocalDate)) &&
+                        (festivalEndLocalDate.isAfter(nowDayLocalDate) || festivalEndLocalDate.isEqual(nowDayLocalDate))
+                    ){
                         count++
                     }
                     else{
@@ -180,8 +184,10 @@ class MonthFragment : Fragment() {
                 }
                 val festivalDayInfo = FestivalDayInfo(LocalDate.of(CalendarUtil.selectedDate.year,CalendarUtil.selectedDate.month,i-dayOfWeek),count)
                 dayList.add(festivalDayInfo)
+                nowDay++
             }
         }
+
         return dayList
     }
 

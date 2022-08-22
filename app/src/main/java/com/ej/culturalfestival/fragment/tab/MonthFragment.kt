@@ -12,11 +12,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ej.culturalfestival.MainActivity
-import com.ej.culturalfestival.adapter.CalendarAdapter
+import com.ej.culturalfestival.adapter.MonthCalendarAdapter
 import com.ej.culturalfestival.databinding.FragmentMonthBinding
-import com.ej.culturalfestival.dto.FestivalDayInfo
+import com.ej.culturalfestival.dto.FestivalDayInfoDto
 import com.ej.culturalfestival.dto.response.FestivalDto
 import com.ej.culturalfestival.util.CalendarUtil
+import com.ej.culturalfestival.util.CalendarUtil.Companion.formatter
 import com.ej.culturalfestival.viewmodel.FestivalViewModel
 import java.time.LocalDate
 import java.time.YearMonth
@@ -33,7 +34,6 @@ class MonthFragment : Fragment() {
     lateinit var monthYearText: TextView
     lateinit var recycelrView : RecyclerView
 
-    private val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
     lateinit var monthFragmentBinding : FragmentMonthBinding
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -103,7 +103,7 @@ class MonthFragment : Fragment() {
         val dayList = daysInMonthArray(CalendarUtil.selectedDate,festivalList)
 
         // 어뎁터 데이터 적용
-        val adapter = CalendarAdapter()
+        val adapter = MonthCalendarAdapter()
         adapter.submitList(dayList)
 
         // 레이아웃 설정 (열 7개)
@@ -118,8 +118,8 @@ class MonthFragment : Fragment() {
 
     }
 
-    private fun daysInMonthArray(date : LocalDate, festivalList: List<FestivalDto>) : MutableList<FestivalDayInfo?>{
-        val dayList :MutableList<FestivalDayInfo?> = mutableListOf()
+    private fun daysInMonthArray(date : LocalDate, festivalList: List<FestivalDto>) : MutableList<FestivalDayInfoDto?>{
+        val dayList :MutableList<FestivalDayInfoDto?> = mutableListOf()
         val yearMonth = YearMonth.from(date)
 
         // 해당 월 마지막 날짜 가져오기(예 28, 30, 31)
@@ -182,8 +182,8 @@ class MonthFragment : Fragment() {
                         break
                     }
                 }
-                val festivalDayInfo = FestivalDayInfo(LocalDate.of(CalendarUtil.selectedDate.year,CalendarUtil.selectedDate.month,i-dayOfWeek),count)
-                dayList.add(festivalDayInfo)
+                val festivalDayInfoDto = FestivalDayInfoDto(LocalDate.of(CalendarUtil.selectedDate.year,CalendarUtil.selectedDate.month,i-dayOfWeek),count)
+                dayList.add(festivalDayInfoDto)
                 nowDay++
             }
         }

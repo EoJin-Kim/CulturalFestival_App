@@ -2,7 +2,7 @@ package com.ej.culturalfestival.dto
 
 import java.time.LocalDate
 
-data class FestivalDayInfo (
+data class FestivalDayInfoDto (
     val date : LocalDate,
     val count : Int,
 )

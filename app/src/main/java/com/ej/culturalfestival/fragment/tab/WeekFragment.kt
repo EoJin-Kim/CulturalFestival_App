@@ -6,10 +6,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.ej.culturalfestival.MainActivity
+import com.ej.culturalfestival.adapter.WeekCalendarAdapter
 import com.ej.culturalfestival.databinding.FragmentWeekBinding
+import com.ej.culturalfestival.dto.FestivalSummaryDto
+import com.ej.culturalfestival.dto.FestivalWeekInfoDto
+import com.ej.culturalfestival.dto.response.FestivalDto
 import com.ej.culturalfestival.dto.response.WeekInfoDto
 import com.ej.culturalfestival.util.CalendarUtil
+import com.ej.culturalfestival.util.CalendarUtil.Companion.formatter
 import com.ej.culturalfestival.viewmodel.FestivalViewModel
 import java.time.LocalDate
 import java.time.YearMonth
@@ -41,13 +48,13 @@ class WeekFragment : Fragment() {
 
         setDayWeek(CalendarUtil.selectedDate)
 
-        val formatter : DateTimeFormatter = DateTimeFormatter.ofPattern("MM")
-        val monthStr = CalendarUtil.selectedDate.format(formatter)
-        weekFragmentBinding.weekTitle.text = "${monthStr}월 ${nowWeek.weekRow}주"
+        setTitleText()
+
+
 
         val result = festivalViewModel.getFestival(nowWeek.startDate,nowWeek.endDate)
         result.observe(viewLifecycleOwner){
-
+            setWeekView(it)
         }
 
 
@@ -60,6 +67,46 @@ class WeekFragment : Fragment() {
         }
     }
 
+    private fun daysInWeekArray(weekInfo: WeekInfoDto,festivalList : MutableList<FestivalDto>) : MutableList<FestivalWeekInfoDto>{
+        val festivalWeekInfoList : MutableList<FestivalWeekInfoDto> = mutableListOf()
+        val startDay = weekInfo.startDate.dayOfMonth
+        val endDay = weekInfo.endDate.dayOfMonth
+        for (i:Int in startDay until endDay+1){
+            val nowDayLocalDate = LocalDate.of(weekInfo.startDate.year, weekInfo.startDate.month, i)
+            val festivalSummaryList : MutableList<FestivalSummaryDto> = mutableListOf()
+
+            for (festivalDto in festivalList) {
+                val festivalStartLocalDate = LocalDate.parse(festivalDto.fstvlStartDate, formatter);
+                val festivalEndLocalDate = LocalDate.parse(festivalDto.fstvlEndDate, formatter);
+                if(
+                    (festivalStartLocalDate.isBefore(nowDayLocalDate) || festivalStartLocalDate.isEqual(nowDayLocalDate)) &&
+                    (festivalEndLocalDate.isAfter(nowDayLocalDate) || festivalEndLocalDate.isEqual(nowDayLocalDate))
+                ){
+                    val festivalSummaryDto = FestivalSummaryDto(festivalDto.fstvlNm)
+                    festivalSummaryList.add(festivalSummaryDto)
+                }
+            }
+            val festivalWeekInfoDto = FestivalWeekInfoDto(nowDayLocalDate,festivalSummaryList)
+            festivalWeekInfoList.add(festivalWeekInfoDto)
+        }
+        return festivalWeekInfoList
+
+    }
+    private fun setWeekView(festivalList : MutableList<FestivalDto>){
+
+
+        val dayList = daysInWeekArray(nowWeek,festivalList)
+
+        val adapter = WeekCalendarAdapter()
+        adapter.submitList(dayList)
+
+        val manager : RecyclerView.LayoutManager = LinearLayoutManager(requireContext())
+        val weekRecycler = weekFragmentBinding.weekRecycler
+
+        weekRecycler.adapter = adapter
+        weekRecycler.layoutManager = manager
+
+    }
     private fun setDayWeek(date :LocalDate){
 
         val yearMonth = YearMonth.from(date)
@@ -110,5 +157,11 @@ class WeekFragment : Fragment() {
         val weekList : MutableList<WeekInfoDto> = mutableListOf()
 
         return weekList
+    }
+
+    private fun setTitleText(){
+        val formatter : DateTimeFormatter = DateTimeFormatter.ofPattern("MM")
+        val monthStr = CalendarUtil.selectedDate.format(formatter)
+        weekFragmentBinding.weekTitle.text = "${monthStr}월 ${nowWeek.weekRow}주"
     }
 }

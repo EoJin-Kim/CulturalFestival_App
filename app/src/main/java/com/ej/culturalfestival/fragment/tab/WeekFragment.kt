@@ -61,11 +61,6 @@ class WeekFragment : Fragment() {
         return weekFragmentBinding.root
     }
 
-    companion object{
-        fun newInstance() : WeekFragment {
-            return WeekFragment()
-        }
-    }
 
     private fun daysInWeekArray(weekInfo: WeekInfoDto,festivalList : MutableList<FestivalDto>) : MutableList<FestivalWeekInfoDto>{
         val festivalWeekInfoList : MutableList<FestivalWeekInfoDto> = mutableListOf()
@@ -97,7 +92,7 @@ class WeekFragment : Fragment() {
 
         val dayList = daysInWeekArray(nowWeek,festivalList)
 
-        val adapter = WeekCalendarAdapter()
+        val adapter = WeekCalendarAdapter(requireContext())
         adapter.submitList(dayList)
 
         val manager : RecyclerView.LayoutManager = LinearLayoutManager(requireContext())
@@ -164,4 +159,11 @@ class WeekFragment : Fragment() {
         val monthStr = CalendarUtil.selectedDate.format(formatter)
         weekFragmentBinding.weekTitle.text = "${monthStr}월 ${nowWeek.weekRow}주"
     }
+
+    companion object{
+        fun newInstance() : WeekFragment {
+            return WeekFragment()
+        }
+    }
+
 }

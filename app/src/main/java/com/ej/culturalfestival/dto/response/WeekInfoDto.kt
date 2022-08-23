@@ -3,7 +3,7 @@ package com.ej.culturalfestival.dto.response
 import java.time.LocalDate
 
 data class WeekInfoDto(
-    val weekRow : Int,
-    val startDate : LocalDate,
-    val endDate : LocalDate
+    var weekRow : Int,
+    var startDate : LocalDate,
+    var endDate : LocalDate
 )

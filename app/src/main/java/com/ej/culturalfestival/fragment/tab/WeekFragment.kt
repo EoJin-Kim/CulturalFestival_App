@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -46,11 +47,20 @@ class WeekFragment : Fragment() {
         // Inflate the layout for this fragment
         weekFragmentBinding = FragmentWeekBinding.inflate(inflater,container,false)
 
+        val preBtn : Button = weekFragmentBinding.preWeek
+        val nextBtn : Button = weekFragmentBinding.nextWeek
+
+        preBtn.setOnClickListener {
+            movePreWeek()
+        }
+
+        nextBtn.setOnClickListener {
+            moveNextWeek()
+        }
+
         setDayWeek(CalendarUtil.selectedDate)
 
         setTitleText()
-
-
 
         val result = festivalViewModel.getFestival(nowWeek.startDate,nowWeek.endDate)
         result.observe(viewLifecycleOwner){
@@ -59,6 +69,24 @@ class WeekFragment : Fragment() {
 
 
         return weekFragmentBinding.root
+    }
+
+    private fun movePreWeek(){
+        val day = nowWeek.startDate.dayOfMonth
+
+        // 전달로 이동
+        if(day<=7){
+
+        }
+        else{
+            nowWeek.weekRow-=1
+        }
+        nowWeek.startDate = nowWeek.startDate.minusDays(7)
+        nowWeek.endDate = nowWeek.endDate.minusDays(7)
+    }
+
+    private fun moveNextWeek(){
+        val day = nowWeek.endDate.dayOfMonth
     }
 
 

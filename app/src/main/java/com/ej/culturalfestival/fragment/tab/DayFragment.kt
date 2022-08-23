@@ -26,6 +26,7 @@ class DayFragment : Fragment() {
 
     val act : MainActivity by lazy { activity as MainActivity }
     val festivalViewModel : FestivalViewModel by lazy { ViewModelProvider(act).get(FestivalViewModel::class.java) }
+    var nowDay : LocalDate = LocalDate.now()
 
     lateinit var dayFragmentBinding: FragmentDayBinding
 
@@ -48,9 +49,34 @@ class DayFragment : Fragment() {
         result.observe(viewLifecycleOwner){
             setRecycler(it)
         }
+        dayFragmentBinding.preDay.setOnClickListener {
+            movePreDay()
+        }
+
+        dayFragmentBinding.nextDay.setOnClickListener {
+            moveNextDay()
+        }
 
 
         return dayFragmentBinding.root
+    }
+
+    private fun movePreDay(){
+        val moveDay = nowDay.minusDays(1)
+        val dateStr = dayFromDate(moveDay)
+        nowDay=moveDay
+        dayFragmentBinding.nowDayText.text = dateStr
+
+        // 뷰모델에서 해당 날짜 축제 가지고 오로 submit
+    }
+
+    private fun moveNextDay(){
+        val moveDay = nowDay.plusDays(1)
+        val dateStr = dayFromDate(nowDay)
+        nowDay=moveDay
+        dayFragmentBinding.nowDayText.text = dateStr
+
+        // 뷰모델에서 해당 날짜 축제 가지고 오로 submit
     }
 
 

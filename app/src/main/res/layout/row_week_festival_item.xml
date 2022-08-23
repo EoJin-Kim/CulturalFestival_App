@@ -9,4 +9,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="title" />
+
+    <TextView
+        android:id="@+id/week_festival_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="00-00-00 ~ 00-00-00" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#AFAFAF"></FrameLayout>
 </LinearLayout>

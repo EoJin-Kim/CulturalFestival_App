@@ -11,6 +11,13 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
+        <Button
+            android:id="@+id/pre_week"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="이전" />
+
         <TextView
             android:id="@+id/week_title"
             android:layout_width="wrap_content"
@@ -19,6 +26,13 @@
             android:text="0월 0주"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+        <Button
+            android:id="@+id/next_week"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="다음" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView

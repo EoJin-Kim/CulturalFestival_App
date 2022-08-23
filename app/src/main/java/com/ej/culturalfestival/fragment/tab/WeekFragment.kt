@@ -77,7 +77,7 @@ class WeekFragment : Fragment() {
                     (festivalStartLocalDate.isBefore(nowDayLocalDate) || festivalStartLocalDate.isEqual(nowDayLocalDate)) &&
                     (festivalEndLocalDate.isAfter(nowDayLocalDate) || festivalEndLocalDate.isEqual(nowDayLocalDate))
                 ){
-                    val festivalSummaryDto = FestivalSummaryDto(festivalDto.fstvlNm)
+                    val festivalSummaryDto = FestivalSummaryDto(festivalDto.fstvlNm,festivalDto.fstvlStartDate,festivalDto.fstvlEndDate)
                     festivalSummaryList.add(festivalSummaryDto)
                 }
             }

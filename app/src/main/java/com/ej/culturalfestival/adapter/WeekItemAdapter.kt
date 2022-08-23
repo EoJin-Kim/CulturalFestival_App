@@ -30,11 +30,13 @@ class WeekItemAdapter(
     }
     class WeekItemViewHolder (itemView : View): RecyclerView.ViewHolder(itemView){
         private val festivalTitle : TextView = itemView.findViewById(R.id.week_festival_title)
+        private val festivalDate : TextView = itemView.findViewById(R.id.week_festival_date)
         init {
 
         }
         fun bind(festivalSummaryDto: FestivalSummaryDto){
             festivalTitle.text = "${festivalSummaryDto.title}"
+            festivalDate.text = "${festivalSummaryDto.startDate} ~ ${festivalSummaryDto.endDate}"
         }
     }
 }

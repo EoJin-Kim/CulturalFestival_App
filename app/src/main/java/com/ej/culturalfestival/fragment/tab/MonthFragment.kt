@@ -51,8 +51,8 @@ class MonthFragment : Fragment() {
         // 초기화
         monthYearText = monthFragmentBinding.monthYearText
         recycelrView = monthFragmentBinding.monthRecycler
-        val preBtn : Button = monthFragmentBinding.preBtn
-        val nextBtn : Button = monthFragmentBinding.nextBtn
+        val preBtn : Button = monthFragmentBinding.preMonth
+        val nextBtn : Button = monthFragmentBinding.nextMonth
 
         preBtn.setOnClickListener {
             CalendarUtil.selectedDate = CalendarUtil.selectedDate.minusMonths(1)

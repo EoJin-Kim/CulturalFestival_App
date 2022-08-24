@@ -14,6 +14,7 @@ import com.ej.culturalfestival.adapter.WeekCalendarAdapter
 import com.ej.culturalfestival.databinding.FragmentWeekBinding
 import com.ej.culturalfestival.dto.FestivalSummaryDto
 import com.ej.culturalfestival.dto.FestivalWeekInfoDto
+import com.ej.culturalfestival.dto.StartEndDate
 import com.ej.culturalfestival.dto.response.FestivalDto
 import com.ej.culturalfestival.dto.response.WeekInfoDto
 import com.ej.culturalfestival.util.CalendarUtil
@@ -58,11 +59,13 @@ class WeekFragment : Fragment() {
             moveNextWeek()
         }
 
-        setDayWeek(CalendarUtil.selectedDate)
+        nowWeek = setDayWeek(CalendarUtil.selectedDate)
 
         setTitleText()
 
-        val result = festivalViewModel.getFestival(nowWeek.startDate,nowWeek.endDate)
+        val result = festivalViewModel.getFestival(
+            nowWeek.startEndDateList[nowWeek.weekRow].startDate,
+            nowWeek.startEndDateList[nowWeek.weekRow].endDate)
         result.observe(viewLifecycleOwner){
             setWeekView(it)
         }
@@ -74,61 +77,25 @@ class WeekFragment : Fragment() {
     private fun movePreWeek(){
 
 
-        val startDateDOM = nowWeek.startDate.dayOfMonth
-
-        // 첫주의 시작이 일요일이 아니라면
-        if(startDateDOM-7<1){
-            nowWeek.startDate = LocalDate.of(nowWeek.startDate.year,nowWeek.startDate.month,1)
-        }
-        else{
-            nowWeek.startDate = nowWeek.startDate.minusDays(7)
-        }
-        nowWeek.endDate = nowWeek.endDate.minusDays(7)
-
-
-        val yearMonth = YearMonth.from(nowWeek.startDate)
-        val totalDay = yearMonth.lengthOfMonth()
-
-        //첫 번째 날 요일 가져오기(월:1, 일:7)
-        var dayOfWeek : Int = nowWeek.startDate.dayOfWeek.value
-
-        if (dayOfWeek == 7) {
-            dayOfWeek =0
-        }
-
-        if(startDateDOM<=dayOfWeek){
-            nowWeek.weekRow=1;
-        }
-        else{
-            var chkDate = (7 - dayOfWeek)
-            for(row : Int in 2 until 6){
-
-                if(chkDate==startDateDOM){
-                    nowWeek.weekRow = row
-                    setTitleText()
-                    break
-                }
-                chkDate +=7
-
-            }
-        }
-
 
 
 
     }
 
     private fun moveNextWeek(){
-        val day = nowWeek.endDate.dayOfMonth
     }
 
 
     private fun daysInWeekArray(weekInfo: WeekInfoDto,festivalList : MutableList<FestivalDto>) : MutableList<FestivalWeekInfoDto>{
         val festivalWeekInfoList : MutableList<FestivalWeekInfoDto> = mutableListOf()
-        val startDay = weekInfo.startDate.dayOfMonth
-        val endDay = weekInfo.endDate.dayOfMonth
+        val startDay = weekInfo.startEndDateList[weekInfo.weekRow].startDate.dayOfMonth
+        val endDay = weekInfo.startEndDateList[weekInfo.weekRow].endDate.dayOfMonth
         for (i:Int in startDay until endDay+1){
-            val nowDayLocalDate = LocalDate.of(weekInfo.startDate.year, weekInfo.startDate.month, i)
+            val nowDayLocalDate = LocalDate.of(
+                weekInfo.startEndDateList[weekInfo.weekRow].startDate.year,
+                weekInfo.startEndDateList[weekInfo.weekRow].startDate.month,
+                i
+            )
             val festivalSummaryList : MutableList<FestivalSummaryDto> = mutableListOf()
 
             for (festivalDto in festivalList) {
@@ -169,7 +136,7 @@ class WeekFragment : Fragment() {
         weekRecycler.layoutManager = manager
 
     }
-    private fun setDayWeek(date :LocalDate){
+    private fun setDayWeek(date :LocalDate) : WeekInfoDto{
 
         val yearMonth = YearMonth.from(date)
 
@@ -192,26 +159,43 @@ class WeekFragment : Fragment() {
 
         val nowDay = date.dayOfMonth
 
-        if(nowDay <=firstWeekCnt){
-            val startDate = LocalDate.of(date.year,date.month,1)
-            val endDate = LocalDate.of(date.year,date.month,firstWeekCnt)
-            nowWeek = WeekInfoDto(1,startDate,endDate)
-            return
+        val startEndDateList :MutableList<StartEndDate> = mutableListOf()
+        // 첫 주
+        val firstStartEndDate= StartEndDate(
+            LocalDate.of(date.year,date.month,1),
+            LocalDate.of(date.year,date.month,firstWeekCnt)
+        )
+        startEndDateList.add(firstStartEndDate)
+
+        // 두번째 주부터 7일 완전한 주 마지막까지
+        for ( weekRow : Int in 1 until fullWeekDayCount/7){
+            val startDate = LocalDate.of(date.year,date.month,firstWeekCnt+(weekRow)*7 +1)
+            val endDate = LocalDate.of(date.year,date.month,firstWeekCnt+weekRow*7)
+            val startEndDate = StartEndDate(startDate,endDate)
+            startEndDateList.add(startEndDate)
         }
 
+        // 마지막 완전하지 않은 주
+        if(lastWeekCnt!=0){
+            val startDate = LocalDate.of(date.year,date.month,date.dayOfMonth-lastWeekCnt+1)
+            val endDate = LocalDate.of(date.year,date.month,date.dayOfMonth)
+            val startEndDate = StartEndDate(startDate,endDate)
+            startEndDateList.add(startEndDate)
+        }
 
-        for ( weekRow : Int in 1 until fullWeekDayCount/2+1 ){
-            if(nowDay<=firstWeekCnt+weekRow*7){
-                val startDate = LocalDate.of(date.year,date.month,firstWeekCnt+(weekRow-1)*7 +1)
-                val endDate = LocalDate.of(date.year,date.month,firstWeekCnt+weekRow*7)
-                nowWeek = WeekInfoDto(weekRow+1,startDate,endDate)
-                return
+        var idx = 1
+        for (startEndDate in startEndDateList) {
+            if(
+                date.isEqual(startEndDate.startDate) ||
+                date.isEqual(startEndDate.endDate) ||
+                (date.isAfter(startEndDate.startDate) && date.isBefore(startEndDate.endDate))
+            ){
+                break
             }
+            idx++
         }
-
-        val startDate = LocalDate.of(date.year,date.month,firstWeekCnt+fullWeekDayCount+1)
-        val endDate = LocalDate.of(date.year,date.month,monthDayCnt)
-        nowWeek = WeekInfoDto(fullWeekDayCount/2,startDate,endDate)
+        val weekInfoDto = WeekInfoDto(idx,startEndDateList)
+        return weekInfoDto
 
 
     }
@@ -223,7 +207,7 @@ class WeekFragment : Fragment() {
 
     private fun setTitleText(){
         val formatter : DateTimeFormatter = DateTimeFormatter.ofPattern("MM")
-        val monthStr = nowWeek.startDate.format(formatter)
+        val monthStr = nowWeek.startEndDateList[0].startDate.format(formatter)
         weekFragmentBinding.weekTitle.text = "${monthStr}월 ${nowWeek.weekRow}주"
     }
 

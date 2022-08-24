@@ -42,6 +42,7 @@ class MonthCalendarAdapter(
 
                 parentView.setBackgroundColor(Color.parseColor(noDateColorCode))
                 this.dayText.text = ""
+                this.countText.text = ""
             } else {
                 this.dayText.text = "${festivalDayInfoDto.date.dayOfMonth}"
                 this.countText.text = "${festivalDayInfoDto.count}개"

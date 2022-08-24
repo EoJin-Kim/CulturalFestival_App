@@ -72,17 +72,50 @@ class WeekFragment : Fragment() {
     }
 
     private fun movePreWeek(){
-        val day = nowWeek.startDate.dayOfMonth
 
-        // 전달로 이동
-        if(day<=7){
 
+        val startDateDOM = nowWeek.startDate.dayOfMonth
+
+        // 첫주의 시작이 일요일이 아니라면
+        if(startDateDOM-7<1){
+            nowWeek.startDate = LocalDate.of(nowWeek.startDate.year,nowWeek.startDate.month,1)
         }
         else{
-            nowWeek.weekRow-=1
+            nowWeek.startDate = nowWeek.startDate.minusDays(7)
         }
-        nowWeek.startDate = nowWeek.startDate.minusDays(7)
         nowWeek.endDate = nowWeek.endDate.minusDays(7)
+
+
+        val yearMonth = YearMonth.from(nowWeek.startDate)
+        val totalDay = yearMonth.lengthOfMonth()
+
+        //첫 번째 날 요일 가져오기(월:1, 일:7)
+        var dayOfWeek : Int = nowWeek.startDate.dayOfWeek.value
+
+        if (dayOfWeek == 7) {
+            dayOfWeek =0
+        }
+
+        if(startDateDOM<=dayOfWeek){
+            nowWeek.weekRow=1;
+        }
+        else{
+            var chkDate = (7 - dayOfWeek)
+            for(row : Int in 2 until 6){
+
+                if(chkDate==startDateDOM){
+                    nowWeek.weekRow = row
+                    setTitleText()
+                    break
+                }
+                chkDate +=7
+
+            }
+        }
+
+
+
+
     }
 
     private fun moveNextWeek(){
@@ -105,7 +138,13 @@ class WeekFragment : Fragment() {
                     (festivalStartLocalDate.isBefore(nowDayLocalDate) || festivalStartLocalDate.isEqual(nowDayLocalDate)) &&
                     (festivalEndLocalDate.isAfter(nowDayLocalDate) || festivalEndLocalDate.isEqual(nowDayLocalDate))
                 ){
-                    val festivalSummaryDto = FestivalSummaryDto(festivalDto.fstvlNm,festivalDto.fstvlStartDate,festivalDto.fstvlEndDate)
+                    val festivalSummaryDto = FestivalSummaryDto(
+                        festivalDto.id,
+                        festivalDto.fstvlNm,
+                        festivalDto.fstvlCo,
+                        festivalDto.fstvlStartDate,
+                        festivalDto.fstvlEndDate
+                    )
                     festivalSummaryList.add(festivalSummaryDto)
                 }
             }
@@ -184,7 +223,7 @@ class WeekFragment : Fragment() {
 
     private fun setTitleText(){
         val formatter : DateTimeFormatter = DateTimeFormatter.ofPattern("MM")
-        val monthStr = CalendarUtil.selectedDate.format(formatter)
+        val monthStr = nowWeek.startDate.format(formatter)
         weekFragmentBinding.weekTitle.text = "${monthStr}월 ${nowWeek.weekRow}주"
     }
 

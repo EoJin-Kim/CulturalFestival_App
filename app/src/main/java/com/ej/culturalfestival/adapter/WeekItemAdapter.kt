@@ -30,6 +30,7 @@ class WeekItemAdapter(
     }
     class WeekItemViewHolder (itemView : View): RecyclerView.ViewHolder(itemView){
         private val festivalTitle : TextView = itemView.findViewById(R.id.week_festival_title)
+        private val festivalContent : TextView = itemView.findViewById(R.id.week_festival_content)
         private val festivalDate : TextView = itemView.findViewById(R.id.week_festival_date)
         init {
 

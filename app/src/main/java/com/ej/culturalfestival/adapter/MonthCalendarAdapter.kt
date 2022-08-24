@@ -4,7 +4,6 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -31,17 +30,21 @@ class MonthCalendarAdapter(
     class MonthCalendarViewHolder(itemView : View): RecyclerView.ViewHolder(itemView){
         private val parentView : View  = itemView.findViewById(R.id.parent_view)
         private val dayText  : TextView = itemView.findViewById(R.id.day_text)
-        private val countBotton : Button = itemView.findViewById(R.id.day_count)
+        private val countText : TextView = itemView.findViewById(R.id.day_count)
+
+        private val noDateColorCode = "#B5F3C7"
         init {
 
         }
 
         fun bind(festivalDayInfoDto : FestivalDayInfoDto?, position: Int){
             if (festivalDayInfoDto == null) {
+
+                parentView.setBackgroundColor(Color.parseColor(noDateColorCode))
                 this.dayText.text = ""
             } else {
                 this.dayText.text = "${festivalDayInfoDto.date.dayOfMonth}"
-                this.countBotton.text = "${festivalDayInfoDto.count}개"
+                this.countText.text = "${festivalDayInfoDto.count}개"
             }
 
             // 토요일

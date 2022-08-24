@@ -10,4 +10,7 @@
 
     <color name="main_background">#FFF7F8FA</color>
     <color name="main_gray">#FFD4D4D4</color>
+    <color name="main_green">#1A7D36</color>
+    <color name="main_light_green">#B5F3C7</color>
+    <color name="main_white_green">#F1FCF4</color>
 </resources>

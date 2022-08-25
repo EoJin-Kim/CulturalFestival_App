@@ -52,11 +52,13 @@ class WeekFragment : Fragment() {
         val nextBtn : Button = weekFragmentBinding.nextWeek
 
         preBtn.setOnClickListener {
-            movePreWeek()
+            nowWeek = movePreWeek(nowWeek)
+            setTitleText()
         }
 
         nextBtn.setOnClickListener {
-            moveNextWeek()
+            nowWeek = moveNextWeek(nowWeek)
+            setTitleText()
         }
 
         nowWeek = setDayWeek(CalendarUtil.selectedDate)
@@ -74,15 +76,30 @@ class WeekFragment : Fragment() {
         return weekFragmentBinding.root
     }
 
-    private fun movePreWeek(){
-
-
-
-
+    private fun movePreWeek(weekInfoDto: WeekInfoDto) : WeekInfoDto{
+        if (weekInfoDto.weekRow != 1) {
+            weekInfoDto.weekRow--
+            return weekInfoDto
+        }
+        else{
+            val preWeekInfoDto = setDayWeek(weekInfoDto.startEndDateList[0].startDate.minusMonths(1))
+            preWeekInfoDto.weekRow = preWeekInfoDto.startEndDateList.size
+            return preWeekInfoDto
+        }
 
     }
 
-    private fun moveNextWeek(){
+    private fun moveNextWeek(weekInfoDto: WeekInfoDto) : WeekInfoDto{
+        if (weekInfoDto.weekRow == weekInfoDto.startEndDateList.size) {
+            val nextWeekInfoDto = setDayWeek(weekInfoDto.startEndDateList[0].startDate.plusMonths(1))
+            nextWeekInfoDto.weekRow = 1
+            return nextWeekInfoDto
+        }
+        else {
+            weekInfoDto.weekRow++
+            return weekInfoDto
+        }
+
     }
 
 
@@ -136,7 +153,7 @@ class WeekFragment : Fragment() {
         weekRecycler.layoutManager = manager
 
     }
-    private fun setDayWeek(date :LocalDate) : WeekInfoDto{
+    fun setDayWeek(date : LocalDate) : WeekInfoDto {
 
         val yearMonth = YearMonth.from(date)
 
@@ -144,7 +161,7 @@ class WeekFragment : Fragment() {
         val monthDayCnt : Int = yearMonth.lengthOfMonth()
 
         // 해당 월의 첫 번째 날 가져오기 (예 4월1일)
-        val firstDay : LocalDate = CalendarUtil.selectedDate.withDayOfMonth(1)
+        val firstDay : LocalDate =date.withDayOfMonth(1)
 
         //첫 번째 날 요일 가져오기(월:1, 일:7)
         var dayOfWeek : Int = firstDay.dayOfWeek.value
@@ -168,8 +185,8 @@ class WeekFragment : Fragment() {
         startEndDateList.add(firstStartEndDate)
 
         // 두번째 주부터 7일 완전한 주 마지막까지
-        for ( weekRow : Int in 1 until fullWeekDayCount/7){
-            val startDate = LocalDate.of(date.year,date.month,firstWeekCnt+(weekRow)*7 +1)
+        for ( weekRow : Int in 1 until fullWeekDayCount/7+1){
+            val startDate = LocalDate.of(date.year,date.month,firstWeekCnt+(weekRow-1)*7 +1)
             val endDate = LocalDate.of(date.year,date.month,firstWeekCnt+weekRow*7)
             val startEndDate = StartEndDate(startDate,endDate)
             startEndDateList.add(startEndDate)
@@ -177,8 +194,8 @@ class WeekFragment : Fragment() {
 
         // 마지막 완전하지 않은 주
         if(lastWeekCnt!=0){
-            val startDate = LocalDate.of(date.year,date.month,date.dayOfMonth-lastWeekCnt+1)
-            val endDate = LocalDate.of(date.year,date.month,date.dayOfMonth)
+            val startDate = LocalDate.of(date.year,date.month,date.lengthOfMonth()-lastWeekCnt+1)
+            val endDate = LocalDate.of(date.year,date.month,date.lengthOfMonth())
             val startEndDate = StartEndDate(startDate,endDate)
             startEndDateList.add(startEndDate)
         }

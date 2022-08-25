@@ -14,20 +14,27 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/border_left_round"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingTop="5dp"
+            android:paddingRight="20dp"
+            android:paddingBottom="5dp">
 
             <TextView
                 android:id="@+id/week_item_day"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:text="00" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/week_item_dow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@drawable/border_festival"
                 android:text="요일"
                 app:backgroundTint="@color/main_light_green" />
+
         </LinearLayout>
 
         <TextView

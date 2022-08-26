@@ -7,12 +7,14 @@ import android.view.Menu
 import android.view.MenuItem
 import com.ej.culturalfestival.databinding.ActivityMainBinding
 import com.ej.culturalfestival.fragment.CalendarFagment
+import com.ej.culturalfestival.fragment.SearchFragment
 
 class MainActivity : AppCompatActivity() {
 
     val mainActivityBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
 
     val calendarFagment  = CalendarFagment.newInstance()
+    val searchFragment = SearchFragment.newInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +39,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
             R.id.menu_search ->{
-                Log.d("menu","click")
+                setFragment("search")
             }
         }
         return super.onOptionsItemSelected(item)
@@ -52,10 +54,9 @@ class MainActivity : AppCompatActivity() {
                 tran.replace(R.id.container, calendarFagment)
             }
 
-//            "open_member" ->{
-//                tran.addToBackStack(name)
-//                tran.replace(R.id.container,GroupMemberFragment())
-//            }
+            "search" ->{
+                tran.replace(R.id.container,searchFragment)
+            }
 
         }
 

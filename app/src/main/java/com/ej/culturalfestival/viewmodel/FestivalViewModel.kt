@@ -20,4 +20,10 @@ class FestivalViewModel :ViewModel(){
         return result
     }
 
+    fun getFestival(id : Long) : LiveData<FestivalDto>{
+
+        val result = festivalFetchr.getFestival(id)
+        return result
+    }
+
 }

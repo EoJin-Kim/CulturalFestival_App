@@ -8,12 +8,13 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingRight="10dp">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/border_left_round"
+            android:background="@color/main_light_green"
             android:orientation="horizontal"
             android:paddingTop="5dp"
             android:paddingRight="20dp"
@@ -33,17 +34,32 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/border_festival"
                 android:text="요일"
-                app:backgroundTint="@color/main_light_green" />
+                app:backgroundTint="@color/main_green" />
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/week_item_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:gravity="right"
-            android:text="0" />
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/week_item_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="0" />
+
+            <TextView
+                android:id="@+id/week_item_open_close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="닫기" />
+        </LinearLayout>
 
     </LinearLayout>
     <FrameLayout
@@ -55,8 +71,10 @@
         android:id="@+id/week_item_recycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="15dp"
+        android:layout_height="1dp"
+        android:layout_marginBottom="10dp"
         android:background="#AFAFAF"></FrameLayout>
 </LinearLayout>

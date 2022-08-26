@@ -12,11 +12,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ej.culturalfestival.MainActivity
 import com.ej.culturalfestival.adapter.WeekCalendarAdapter
 import com.ej.culturalfestival.databinding.FragmentWeekBinding
+import com.ej.culturalfestival.dto.FestivalDetailDto
 import com.ej.culturalfestival.dto.FestivalSummaryDto
 import com.ej.culturalfestival.dto.FestivalWeekInfoDto
 import com.ej.culturalfestival.dto.StartEndDate
 import com.ej.culturalfestival.dto.response.FestivalDto
 import com.ej.culturalfestival.dto.response.WeekInfoDto
+import com.ej.culturalfestival.fragment.dialog.FestivalFragmentDialog
 import com.ej.culturalfestival.util.CalendarUtil
 import com.ej.culturalfestival.util.CalendarUtil.Companion.formatter
 import com.ej.culturalfestival.viewmodel.FestivalViewModel
@@ -34,6 +36,7 @@ class WeekFragment : Fragment() {
 
     val act : MainActivity by lazy { activity as MainActivity }
     val festivalViewModel : FestivalViewModel by lazy { ViewModelProvider(act).get(FestivalViewModel::class.java) }
+    lateinit var recycler : RecyclerView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,15 +53,32 @@ class WeekFragment : Fragment() {
 
         val preBtn : Button = weekFragmentBinding.preWeek
         val nextBtn : Button = weekFragmentBinding.nextWeek
-
+        recycler = weekFragmentBinding.weekRecycler
         preBtn.setOnClickListener {
             nowWeek = movePreWeek(nowWeek)
             setTitleText()
+
+            val result = festivalViewModel.getFestival(
+                nowWeek.startEndDateList[nowWeek.weekRow-1].startDate,
+                nowWeek.startEndDateList[nowWeek.weekRow-1].endDate
+            )
+
+            result.observe(viewLifecycleOwner){
+                setWeekView(it)
+            }
         }
 
         nextBtn.setOnClickListener {
             nowWeek = moveNextWeek(nowWeek)
             setTitleText()
+            val result = festivalViewModel.getFestival(
+                nowWeek.startEndDateList[nowWeek.weekRow-1].startDate,
+                nowWeek.startEndDateList[nowWeek.weekRow-1].endDate
+            )
+
+            result.observe(viewLifecycleOwner){
+                setWeekView(it)
+            }
         }
 
         nowWeek = setDayWeek(CalendarUtil.selectedDate)
@@ -66,8 +86,8 @@ class WeekFragment : Fragment() {
         setTitleText()
 
         val result = festivalViewModel.getFestival(
-            nowWeek.startEndDateList[nowWeek.weekRow].startDate,
-            nowWeek.startEndDateList[nowWeek.weekRow].endDate)
+            nowWeek.startEndDateList[nowWeek.weekRow-1].startDate,
+            nowWeek.startEndDateList[nowWeek.weekRow-1].endDate)
         result.observe(viewLifecycleOwner){
             setWeekView(it)
         }
@@ -105,45 +125,60 @@ class WeekFragment : Fragment() {
 
     private fun daysInWeekArray(weekInfo: WeekInfoDto,festivalList : MutableList<FestivalDto>) : MutableList<FestivalWeekInfoDto>{
         val festivalWeekInfoList : MutableList<FestivalWeekInfoDto> = mutableListOf()
-        val startDay = weekInfo.startEndDateList[weekInfo.weekRow].startDate.dayOfMonth
-        val endDay = weekInfo.startEndDateList[weekInfo.weekRow].endDate.dayOfMonth
+        val startDay = weekInfo.startEndDateList[weekInfo.weekRow-1].startDate.dayOfMonth
+        val endDay = weekInfo.startEndDateList[weekInfo.weekRow-1].endDate.dayOfMonth
         for (i:Int in startDay until endDay+1){
             val nowDayLocalDate = LocalDate.of(
-                weekInfo.startEndDateList[weekInfo.weekRow].startDate.year,
-                weekInfo.startEndDateList[weekInfo.weekRow].startDate.month,
+                weekInfo.startEndDateList[weekInfo.weekRow-1].startDate.year,
+                weekInfo.startEndDateList[weekInfo.weekRow-1].startDate.month,
                 i
             )
-            val festivalSummaryList : MutableList<FestivalSummaryDto> = mutableListOf()
+            val festivalSummaryList: MutableList<FestivalSummaryDto> = getFestivalSummaryList(festivalList, nowDayLocalDate)
 
-            for (festivalDto in festivalList) {
-                val festivalStartLocalDate = LocalDate.parse(festivalDto.fstvlStartDate, formatter);
-                val festivalEndLocalDate = LocalDate.parse(festivalDto.fstvlEndDate, formatter);
-                if(
-                    (festivalStartLocalDate.isBefore(nowDayLocalDate) || festivalStartLocalDate.isEqual(nowDayLocalDate)) &&
-                    (festivalEndLocalDate.isAfter(nowDayLocalDate) || festivalEndLocalDate.isEqual(nowDayLocalDate))
-                ){
-                    val festivalSummaryDto = FestivalSummaryDto(
-                        festivalDto.id,
-                        festivalDto.fstvlNm,
-                        festivalDto.fstvlCo,
-                        festivalDto.fstvlStartDate,
-                        festivalDto.fstvlEndDate
-                    )
-                    festivalSummaryList.add(festivalSummaryDto)
-                }
-            }
             val festivalWeekInfoDto = FestivalWeekInfoDto(nowDayLocalDate,festivalSummaryList)
             festivalWeekInfoList.add(festivalWeekInfoDto)
         }
         return festivalWeekInfoList
 
     }
+
+    private fun getFestivalSummaryList(
+        festivalList: MutableList<FestivalDto>,
+        nowDayLocalDate: LocalDate?
+    ): MutableList<FestivalSummaryDto> {
+        val festivalSummaryList: MutableList<FestivalSummaryDto> = mutableListOf()
+
+        for (festivalDto in festivalList) {
+            val festivalStartLocalDate = LocalDate.parse(festivalDto.fstvlStartDate, formatter);
+            val festivalEndLocalDate = LocalDate.parse(festivalDto.fstvlEndDate, formatter);
+            if (
+                (festivalStartLocalDate.isBefore(nowDayLocalDate) || festivalStartLocalDate.isEqual(
+                    nowDayLocalDate
+                )) &&
+                (festivalEndLocalDate.isAfter(nowDayLocalDate) || festivalEndLocalDate.isEqual(
+                    nowDayLocalDate
+                ))
+            ) {
+                val festivalSummaryDto = FestivalSummaryDto(
+                    festivalDto.id,
+                    festivalDto.fstvlNm,
+                    festivalDto.fstvlCo,
+                    festivalDto.fstvlStartDate,
+                    festivalDto.fstvlEndDate
+                )
+                festivalSummaryList.add(festivalSummaryDto)
+            }
+        }
+        return festivalSummaryList
+    }
+
     private fun setWeekView(festivalList : MutableList<FestivalDto>){
 
 
         val dayList = daysInWeekArray(nowWeek,festivalList)
 
-        val adapter = WeekCalendarAdapter(requireContext())
+        val funFestivalClickVal : (Long) -> Unit = {id -> festivalClickEvent(id)}
+        val adapter = WeekCalendarAdapter(requireContext(),funFestivalClickVal)
         adapter.submitList(dayList)
 
         val manager : RecyclerView.LayoutManager = LinearLayoutManager(requireContext())
@@ -227,6 +262,21 @@ class WeekFragment : Fragment() {
         val monthStr = nowWeek.startEndDateList[0].startDate.format(formatter)
         weekFragmentBinding.weekTitle.text = "${monthStr}월 ${nowWeek.weekRow}주"
     }
+
+    private fun festivalClickEvent(id : Long){
+        val result = festivalViewModel.getFestival(id)
+        result.observe(viewLifecycleOwner){
+            val festivalDetailDto = FestivalDetailDto(it)
+            val funUrlOpen : (String) -> Unit =  { url -> urlOpen(url) }
+            val dialog = FestivalFragmentDialog(festivalDetailDto,funUrlOpen)
+            dialog.show(act.supportFragmentManager,"축제 정보")
+        }
+
+    }
+    private fun urlOpen(url : String){
+
+    }
+
 
     companion object{
         fun newInstance() : WeekFragment {

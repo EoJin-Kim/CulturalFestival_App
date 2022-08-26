@@ -12,6 +12,7 @@ import com.ej.culturalfestival.dto.FestivalSummaryDto
 import com.ej.culturalfestival.dto.FestivalWeekInfoDto
 
 class WeekItemAdapter(
+    private val onClick : (Long) -> Unit,
 ) : ListAdapter<FestivalSummaryDto, WeekItemAdapter.WeekItemViewHolder>(WeekItemDiffCallback){
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -20,7 +21,7 @@ class WeekItemAdapter(
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.row_week_festival_item,parent,false)
 
-        val holder = WeekItemAdapter.WeekItemViewHolder(view);
+        val holder = WeekItemAdapter.WeekItemViewHolder(view,onClick);
         return holder
     }
 
@@ -28,16 +29,21 @@ class WeekItemAdapter(
         val festivalSummaryDto = getItem(position)
         holder.bind(festivalSummaryDto)
     }
-    class WeekItemViewHolder (itemView : View): RecyclerView.ViewHolder(itemView){
+    class WeekItemViewHolder (itemView : View,private val onClick : (Long) -> Unit,): RecyclerView.ViewHolder(itemView){
         private val festivalTitle : TextView = itemView.findViewById(R.id.week_festival_title)
         private val festivalContent : TextView = itemView.findViewById(R.id.week_festival_content)
         private val festivalDate : TextView = itemView.findViewById(R.id.week_festival_date)
+        private var festivalId : Long = 0
         init {
-
+            itemView.setOnClickListener {
+                onClick(festivalId)
+            }
         }
         fun bind(festivalSummaryDto: FestivalSummaryDto){
             festivalTitle.text = "${festivalSummaryDto.title}"
+            festivalContent.text = "${festivalSummaryDto.content}"
             festivalDate.text = "${festivalSummaryDto.startDate} ~ ${festivalSummaryDto.endDate}"
+            festivalId = festivalSummaryDto.id
         }
     }
 }

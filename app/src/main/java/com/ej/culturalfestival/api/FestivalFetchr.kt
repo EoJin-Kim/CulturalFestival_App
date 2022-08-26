@@ -44,4 +44,27 @@ class FestivalFetchr {
          })
          return result
     }
+
+    fun getFestival(id : Long) : LiveData<FestivalDto> {
+        var result : MutableLiveData<FestivalDto> = MutableLiveData()
+        val festivalRequest = festivalApi.getFestival(id)
+
+        festivalRequest.enqueue(object : Callback<ResponseDto<FestivalDto>> {
+            override fun onResponse(
+                call: Call<ResponseDto<FestivalDto>>,
+                response: Response<ResponseDto<FestivalDto>>
+            ) {
+                val aboutMeResponse : ResponseDto<FestivalDto>? = response.body()
+                result.value = aboutMeResponse!!.response
+            }
+
+            override fun onFailure(
+                call: Call<ResponseDto<FestivalDto>>,
+                t: Throwable
+            ) {
+                Log.d("http","request error")
+            }
+        })
+        return result
+    }
 }

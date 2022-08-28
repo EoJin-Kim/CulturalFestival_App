@@ -93,6 +93,9 @@ class DayFragment : Fragment() {
                 festivalDto.fstvlNm,
                 festivalDto.fstvlCo,
                 festivalDto.phoneNumber,
+                festivalDto.auspcInstt,
+                festivalDto.suprtInstt,
+                festivalDto.rdnmadr,
                 festivalDto.lnmadr,
                 "${festivalDto.fstvlStartDate} ~ ${festivalDto.fstvlEndDate}",
                 festivalDto.homepageUrl

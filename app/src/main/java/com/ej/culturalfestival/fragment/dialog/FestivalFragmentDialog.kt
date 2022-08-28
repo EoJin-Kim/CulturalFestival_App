@@ -36,8 +36,44 @@ class FestivalFragmentDialog(
         rowDayFestivalItemBinding.dayFestivalTitle.text =festivalDetailDto.title
         rowDayFestivalItemBinding.dayFestivalContent.text =festivalDetailDto.content
         rowDayFestivalItemBinding.dayFestivalPhone.text =festivalDetailDto.phone
-        rowDayFestivalItemBinding.dayFestivalAddress.text =festivalDetailDto.address
+
+        if (festivalDetailDto.lnmadr=="" && festivalDetailDto.rdnmadr==""){
+            rowDayFestivalItemBinding.dayFestivalAddress.visibility = View.GONE
+        }
+        else{
+            if(festivalDetailDto.lnmadr!=""){
+                rowDayFestivalItemBinding.dayFestivalAddress.text = festivalDetailDto.lnmadr
+            }
+            else{
+                rowDayFestivalItemBinding.dayFestivalAddress.text = festivalDetailDto.rdnmadr
+            }
+        }
+
+        if(festivalDetailDto.auspcInstt==""){
+            rowDayFestivalItemBinding.dayAuspcInsttLayout.visibility = View.GONE
+        }
+        else{
+            rowDayFestivalItemBinding.dayFestivalAuspcInstt.text = festivalDetailDto.auspcInstt
+        }
+
+        if(festivalDetailDto.suprtInstt==""){
+            rowDayFestivalItemBinding.daySuprtInsttLayout.visibility = View.GONE
+        }
+        else{
+            rowDayFestivalItemBinding.dayFestivalSuprtInstt.text = festivalDetailDto.suprtInstt
+        }
+
         rowDayFestivalItemBinding.dayFestivalDate.text =festivalDetailDto.date
+
+        if(festivalDetailDto.homepage!=""){
+            rowDayFestivalItemBinding.dayFestivalHompage.setOnClickListener {
+
+            }
+        }
+        else{
+            rowDayFestivalItemBinding.dayFestivalHompage.visibility = View.GONE
+        }
+
 
 
         return rowDayFestivalItemBinding.root

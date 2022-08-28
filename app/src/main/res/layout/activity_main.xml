@@ -11,17 +11,10 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:titleTextColor="@color/black"
         android:background="@color/white"
         android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme">
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:hint="축제 검색"
-            android:textColor="@color/black"
-            android:textColorHint="@color/main_gray" />
-    </androidx.appcompat.widget.Toolbar>
+        android:theme="?attr/actionBarTheme"/>
 
     <FrameLayout
         android:layout_width="match_parent"

@@ -38,9 +38,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
-            R.id.menu_search ->{
-                setFragment("search")
-            }
+//            R.id.menu_search ->{
+//                setFragment("search")
+//            }
         }
         return super.onOptionsItemSelected(item)
     }

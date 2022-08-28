@@ -15,6 +15,9 @@
 
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="toolbarStyle">@style/CustomToolBar</item>
+        <item name="android:editTextColor">@android:color/black</item>
+
     </style>
     <style name="CustomToolBar" parent="@style/Widget.AppCompat.Toolbar">
         <item name="titleTextColor">@color/main_green</item>

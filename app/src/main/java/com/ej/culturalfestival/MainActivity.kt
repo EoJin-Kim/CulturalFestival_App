@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import androidx.core.content.ContextCompat
 import com.ej.culturalfestival.databinding.ActivityMainBinding
 import com.ej.culturalfestival.fragment.CalendarFagment
 import com.ej.culturalfestival.fragment.SearchFragment
@@ -20,9 +21,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         val toolbar = mainActivityBinding.toolbar
-//        toolbar.title="문화 축제"
-//        toolbar.subtitle="문화 출제2"
+        toolbar.title="축제 검색"
+        val color = ContextCompat.getColor(this, R.color.main_green)
+        toolbar.setTitleTextColor(color)
         setSupportActionBar(toolbar)
+
 
 
         setContentView(mainActivityBinding.root)
@@ -32,7 +35,11 @@ class MainActivity : AppCompatActivity() {
 
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        super.onCreateOptionsMenu(menu)
+
         menuInflater.inflate(R.menu.main_menu,menu)
+
+
         return true
     }
 
@@ -42,6 +49,7 @@ class MainActivity : AppCompatActivity() {
 //                setFragment("search")
 //            }
         }
+
         return super.onOptionsItemSelected(item)
     }
 

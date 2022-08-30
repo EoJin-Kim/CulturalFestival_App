@@ -14,4 +14,7 @@ interface FestivalApi {
 
     @GET("/api/festival/search/{id}")
     fun getFestival(@Path("id")id : Long) : Call<ResponseDto<FestivalDto>>
+
+    @GET("/api/festival/search/title/{str}")
+    fun getFestivalByTitle(@Path("str") str: String): Call<ResponseDto<MutableList<FestivalDto>>>
 }

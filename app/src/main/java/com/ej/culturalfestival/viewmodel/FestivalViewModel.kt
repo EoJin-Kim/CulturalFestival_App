@@ -1,7 +1,9 @@
 package com.ej.culturalfestival.viewmodel
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.ej.culturalfestival.api.FestivalApi
 import com.ej.culturalfestival.api.FestivalFetchr
 import com.ej.culturalfestival.dto.response.FestivalDto
 import java.time.LocalDate
@@ -12,6 +14,10 @@ class FestivalViewModel :ViewModel(){
     private val festivalFetchr : FestivalFetchr by lazy { FestivalFetchr() }
 
     private val formatter : DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+    private var _festivalSearchResult = MutableLiveData<MutableList<FestivalDto>>()
+    val festivalSearchResult : LiveData<MutableList<FestivalDto>>
+        get() = _festivalSearchResult
+
 
     fun getFestival(firstLocalDate : LocalDate, lastLocalDate : LocalDate) : LiveData<MutableList<FestivalDto>>{
         val firstDate = formatter.format(firstLocalDate)
@@ -24,6 +30,11 @@ class FestivalViewModel :ViewModel(){
 
         val result = festivalFetchr.getFestival(id)
         return result
+    }
+
+    fun getFestivalByTitle(str : String):LiveData<MutableList<FestivalDto>>{
+        _festivalSearchResult = festivalFetchr.getFestivalByTitle(str)
+        return festivalSearchResult
     }
 
 }

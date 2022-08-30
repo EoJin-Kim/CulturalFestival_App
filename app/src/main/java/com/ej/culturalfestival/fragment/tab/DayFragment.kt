@@ -1,6 +1,7 @@
 package com.ej.culturalfestival.fragment.tab
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -104,7 +105,8 @@ class DayFragment : Fragment() {
         }
 
         // 어뎁터 데이터 적용
-        val adapter = DayCalendarAdapter()
+        val funOpenHompage : (String) -> Unit = {url -> openHomepage(url)}
+        val adapter = DayCalendarAdapter(funOpenHompage)
         adapter.submitList(festivalDetialList)
 
         val manager : RecyclerView.LayoutManager = LinearLayoutManager(requireContext())
@@ -129,6 +131,10 @@ class DayFragment : Fragment() {
             dayFragmentBinding.dayFestivalCount.text = "${it.size} 축제"
             setRecycler(it)
         }
+    }
+
+    fun openHomepage(url : String){
+        Log.d("button","homepage")
     }
 
     companion object{

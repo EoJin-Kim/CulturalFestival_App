@@ -8,14 +8,22 @@ import android.view.ViewGroup
 import android.webkit.DownloadListener
 import android.webkit.WebChromeClient
 import android.webkit.WebViewClient
+import androidx.lifecycle.ViewModelProvider
+import com.ej.culturalfestival.MainActivity
 import com.ej.culturalfestival.R
 import com.ej.culturalfestival.databinding.FragmentSearchBinding
 import com.ej.culturalfestival.databinding.FragmentWebviewBinding
+import com.ej.culturalfestival.viewmodel.FestivalViewModel
 
 
 class WebviewFragment : Fragment() {
 
+    val act : MainActivity by lazy { activity as MainActivity }
+    val festivalViewModel : FestivalViewModel by lazy { ViewModelProvider(act).get(FestivalViewModel::class.java) }
+
     lateinit var webviewFragmentBinding : FragmentWebviewBinding
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -45,7 +53,11 @@ class WebviewFragment : Fragment() {
         webview.settings.javaScriptCanOpenWindowsAutomatically = true
         webview.settings.setSupportMultipleWindows(true)
         webview.settings.domStorageEnabled = true
-        webview.loadUrl("https://www.youtube.com/")
+
+        if(festivalViewModel.openUrl !=""){
+            webview.loadUrl(festivalViewModel.openUrl)
+        }
+
 
         return webviewFragmentBinding.root
     }

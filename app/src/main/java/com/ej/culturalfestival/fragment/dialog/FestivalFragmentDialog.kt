@@ -6,11 +6,14 @@ import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModelProvider
+import com.ej.culturalfestival.MainActivity
 import com.ej.culturalfestival.R
 import com.ej.culturalfestival.databinding.FragmentFestivalDialogBinding
 import com.ej.culturalfestival.databinding.RowDayFestivalItemBinding
 import com.ej.culturalfestival.dto.FestivalDetailDto
 import com.ej.culturalfestival.dto.response.FestivalDto
+import com.ej.culturalfestival.viewmodel.FestivalViewModel
 
 
 class FestivalFragmentDialog(
@@ -18,6 +21,8 @@ class FestivalFragmentDialog(
     private val onclick : (url : String) -> Unit,
     ) : DialogFragment() {
 
+    val act : MainActivity by lazy { activity as MainActivity }
+    val festivalViewModel : FestivalViewModel by lazy { ViewModelProvider(act).get(FestivalViewModel::class.java) }
     lateinit var rowDayFestivalItemBinding: RowDayFestivalItemBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,7 +72,9 @@ class FestivalFragmentDialog(
 
         if(festivalDetailDto.homepage!=""){
             rowDayFestivalItemBinding.dayFestivalHompage.setOnClickListener {
-
+                festivalViewModel.openUrl = festivalDetailDto.homepage
+                act.setFragment("homepage")
+                dismiss()
             }
         }
         else{

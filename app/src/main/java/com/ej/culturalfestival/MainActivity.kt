@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity() {
         val color = ContextCompat.getColor(this, R.color.main_green)
         toolbar.setTitleTextColor(color)
         setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
 
 
@@ -90,6 +91,9 @@ class MainActivity : AppCompatActivity() {
 //            R.id.menu_search ->{
 //                setFragment("search")
 //            }
+            android.R.id.home ->{
+                supportFragmentManager.popBackStack()
+            }
         }
 
         return super.onOptionsItemSelected(item)
@@ -100,9 +104,8 @@ class MainActivity : AppCompatActivity() {
 
         when(name){
             "calendar" ->{
+//                supportFragmentManager.popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE)
 //                tran.addToBackStack(name)
-                supportFragmentManager.popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                tran.addToBackStack(name)
                 tran.replace(R.id.container, calendarFagment)
             }
 

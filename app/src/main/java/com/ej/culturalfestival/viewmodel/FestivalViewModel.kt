@@ -18,6 +18,8 @@ class FestivalViewModel :ViewModel(){
     val festivalSearchResult : LiveData<MutableList<FestivalDto>>
         get() = _festivalSearchResult
 
+    var openUrl : String = ""
+
 
     fun getFestival(firstLocalDate : LocalDate, lastLocalDate : LocalDate) : LiveData<MutableList<FestivalDto>>{
         val firstDate = formatter.format(firstLocalDate)

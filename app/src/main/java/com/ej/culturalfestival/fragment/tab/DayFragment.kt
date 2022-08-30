@@ -135,6 +135,7 @@ class DayFragment : Fragment() {
 
     fun openHomepage(url : String){
         Log.d("button","homepage")
+        festivalViewModel.openUrl = url
         act.setFragment("homepage")
     }
 

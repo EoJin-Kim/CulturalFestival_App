@@ -157,7 +157,7 @@ class MonthFragment : Fragment() {
 //                dayList.add(LocalDate.of(preLocalDate.year,preLocalDate.month,preMonthLastDay-preDayCount-- +1))
 
             }
-            else if( i >= lastDay + dayOfWeek){
+            else if( i > lastDay + dayOfWeek){
                 dayList.add(null)
 //                val nextMonth  = CalendarUtil.selectedDate.plusMonths(1);
 //                val nextLocalDate = YearMonth.from(nextMonth)

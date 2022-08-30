@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.ej.culturalfestival.databinding.ActivityMainBinding
 import com.ej.culturalfestival.fragment.CalendarFagment
 import com.ej.culturalfestival.fragment.SearchFragment
+import com.ej.culturalfestival.fragment.WebviewFragment
 import com.ej.culturalfestival.viewmodel.FestivalViewModel
 
 class MainActivity : AppCompatActivity() {
@@ -22,6 +23,7 @@ class MainActivity : AppCompatActivity() {
 
     val calendarFagment  = CalendarFagment.newInstance()
     val searchFragment = SearchFragment.newInstance()
+    val webviewFragment = WebviewFragment.newInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -107,6 +109,11 @@ class MainActivity : AppCompatActivity() {
             "search" ->{
                 tran.addToBackStack(name)
                 tran.replace(R.id.container,searchFragment)
+            }
+
+            "homepage" ->{
+                tran.addToBackStack(name)
+                tran.replace(R.id.container,webviewFragment)
             }
 
         }

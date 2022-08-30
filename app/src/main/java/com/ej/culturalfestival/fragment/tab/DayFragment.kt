@@ -135,6 +135,7 @@ class DayFragment : Fragment() {
 
     fun openHomepage(url : String){
         Log.d("button","homepage")
+        act.setFragment("homepage")
     }
 
     companion object{

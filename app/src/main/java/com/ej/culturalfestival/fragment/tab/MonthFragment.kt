@@ -1,6 +1,7 @@
 package com.ej.culturalfestival.fragment.tab
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -102,8 +103,10 @@ class MonthFragment : Fragment() {
         // 해당 월 날짜 가져오기
         val dayList = daysInMonthArray(CalendarUtil.selectedDate,festivalList)
 
+
+        val funOpenHompage : (LocalDate) -> Unit = {date -> calendarDayClick(date)}
         // 어뎁터 데이터 적용
-        val adapter = MonthCalendarAdapter()
+        val adapter = MonthCalendarAdapter(funOpenHompage)
         adapter.submitList(dayList)
 
         // 레이아웃 설정 (열 7개)
@@ -178,9 +181,6 @@ class MonthFragment : Fragment() {
                     ){
                         count++
                     }
-                    else{
-                        break
-                    }
                 }
                 val festivalDayInfoDto = FestivalDayInfoDto(LocalDate.of(CalendarUtil.selectedDate.year,CalendarUtil.selectedDate.month,i-dayOfWeek),count)
                 dayList.add(festivalDayInfoDto)
@@ -189,6 +189,9 @@ class MonthFragment : Fragment() {
         }
 
         return dayList
+    }
+    private fun calendarDayClick(date : LocalDate){
+        Log.d("click","$date")
     }
 
     private fun monthYearFromDate(date : LocalDate):String{

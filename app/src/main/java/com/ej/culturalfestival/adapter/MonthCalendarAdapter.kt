@@ -10,15 +10,16 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.ej.culturalfestival.R
 import com.ej.culturalfestival.dto.FestivalDayInfoDto
+import java.time.LocalDate
 
 class MonthCalendarAdapter(
-
+    private val onClick : (LocalDate) -> Unit,
 ) : ListAdapter<FestivalDayInfoDto,MonthCalendarAdapter.MonthCalendarViewHolder>(MonthCalendarDiffCallback){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MonthCalendarViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.card_calendar,parent,false)
-        val holder = MonthCalendarViewHolder(view)
+        val holder = MonthCalendarViewHolder(view,onClick)
         return holder
     }
 
@@ -27,10 +28,12 @@ class MonthCalendarAdapter(
         holder.bind(festivalDayInfo,position)
     }
 
-    class MonthCalendarViewHolder(itemView : View): RecyclerView.ViewHolder(itemView){
+    class MonthCalendarViewHolder(itemView : View,private val onClick : (LocalDate) -> Unit,): RecyclerView.ViewHolder(itemView){
         private val parentView : View  = itemView.findViewById(R.id.parent_view)
         private val dayText  : TextView = itemView.findViewById(R.id.day_text)
         private val countText : TextView = itemView.findViewById(R.id.day_count)
+
+        private var festivalDayInfoDto : FestivalDayInfoDto? = null
 
         private val noDateColorCode = "#B5F3C7"
         init {
@@ -38,14 +41,21 @@ class MonthCalendarAdapter(
         }
 
         fun bind(festivalDayInfoDto : FestivalDayInfoDto?, position: Int){
+
             if (festivalDayInfoDto == null) {
 
                 parentView.setBackgroundColor(Color.parseColor(noDateColorCode))
                 this.dayText.text = ""
                 this.countText.text = ""
             } else {
+                this.festivalDayInfoDto = festivalDayInfoDto
                 this.dayText.text = "${festivalDayInfoDto.date.dayOfMonth}"
                 this.countText.text = "${festivalDayInfoDto.count}개"
+
+                parentView.setOnClickListener {
+                    onClick(festivalDayInfoDto.date)
+                }
+
             }
 
             // 토요일

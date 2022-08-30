@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import com.ej.culturalfestival.databinding.ActivityMainBinding
 import com.ej.culturalfestival.fragment.CalendarFagment
@@ -35,9 +36,28 @@ class MainActivity : AppCompatActivity() {
 
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        super.onCreateOptionsMenu(menu)
 
         menuInflater.inflate(R.menu.main_menu,menu)
+        val item1 = menu?.findItem(R.id.menu_search)
+        val search = item1?.actionView as SearchView
+        search.queryHint = "검색어 입력!!"
+
+        val listener = object : SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                Log.d("search","검색")
+
+                search.clearFocus()
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return true
+            }
+        }
+
+        search.setOnQueryTextListener(listener)
+
+
 
 
         return true

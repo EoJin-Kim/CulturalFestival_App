@@ -57,7 +57,7 @@ class WebviewFragment : Fragment() {
         if(festivalViewModel.openUrl !=""){
             webview.loadUrl(festivalViewModel.openUrl)
         }
-
+        act.supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         return webviewFragmentBinding.root
     }

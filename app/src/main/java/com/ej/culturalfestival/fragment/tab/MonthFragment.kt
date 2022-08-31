@@ -197,7 +197,6 @@ class MonthFragment(
     }
     private fun calendarDayClick(date : LocalDate){
         Log.d("click","$date")
-        CalendarUtil.selectedDate = date
         onClick(date)
 
 

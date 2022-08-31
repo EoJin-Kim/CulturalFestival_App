@@ -7,11 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.ej.culturalfestival.MainActivity
 import com.ej.culturalfestival.adapter.ViewPagerAdapter
 import com.ej.culturalfestival.databinding.FragmentCalendarBinding
 import com.ej.culturalfestival.util.CalendarUtil
+import com.ej.culturalfestival.viewmodel.FestivalViewModel
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import java.time.LocalDate
@@ -19,7 +21,8 @@ import java.time.format.DateTimeFormatter
 
 
 class CalendarFagment : Fragment() {
-    val act : MainActivity by lazy {activity as MainActivity}
+    val act : MainActivity by lazy { activity as MainActivity }
+    val festivalViewModel : FestivalViewModel by lazy { ViewModelProvider(act).get(FestivalViewModel::class.java) }
     lateinit var calendarFagmentBinding : FragmentCalendarBinding
     lateinit var viewPager : ViewPager2
 
@@ -75,8 +78,16 @@ class CalendarFagment : Fragment() {
         return calendarFagmentBinding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+        act.supportActionBar?.setDisplayHomeAsUpEnabled(false)
+    }
+
     private fun monthDayClick(date: LocalDate) {
+        festivalViewModel.setDayFragmentDate(date)
         viewPager.currentItem = 0
+
+
     }
 
 

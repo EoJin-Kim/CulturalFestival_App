@@ -40,6 +40,7 @@ class SearchFragment : Fragment() {
             searchFragmentBinding.searchFestivalCount.text = "${searchResultList.size} 축제"
             setRecycler(searchResultList)
         }
+        act.supportActionBar?.setDisplayHomeAsUpEnabled(true)
         return searchFragmentBinding.root
     }
 

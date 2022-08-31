@@ -15,6 +15,8 @@ import com.ej.culturalfestival.adapter.DayCalendarAdapter
 import com.ej.culturalfestival.databinding.FragmentDayBinding
 import com.ej.culturalfestival.dto.FestivalDetailDto
 import com.ej.culturalfestival.dto.response.FestivalDto
+import com.ej.culturalfestival.fragment.dialog.DialogMonthCalendarFragment
+import com.ej.culturalfestival.fragment.dialog.FestivalFragmentDialog
 import com.ej.culturalfestival.util.CalendarUtil
 import com.ej.culturalfestival.viewmodel.FestivalViewModel
 import java.time.LocalDate
@@ -25,6 +27,7 @@ class DayFragment : Fragment() {
 
     val act : MainActivity by lazy { activity as MainActivity }
     val festivalViewModel : FestivalViewModel by lazy { ViewModelProvider(act).get(FestivalViewModel::class.java) }
+    val dialogMonthCalendarFragment: DialogMonthCalendarFragment by lazy { DialogMonthCalendarFragment.newInstance() }
     var nowLocalDate : LocalDate = LocalDate.now()
 
     lateinit var dayFragmentBinding: FragmentDayBinding
@@ -48,11 +51,27 @@ class DayFragment : Fragment() {
 //        result.observe(viewLifecycleOwner){
 //            setRecycler(it)
 //        }
+        dayFragmentBinding.nowDayText.setOnClickListener {
+            dialogMonthCalendarFragment.show(act.supportFragmentManager,"축제 정보")
+        }
+
+
+
         val dayFragmentDate = festivalViewModel.dayFragmentDate
+
+
+
+
         dayFragmentDate.observe(viewLifecycleOwner){
+            nowLocalDate = it
+            val dateStr = dayFromDate(it)
+            dayFragmentBinding.nowDayText.text = dateStr
             getFestival(it)
         }
-        festivalViewModel.setDayFragmentDate(LocalDate.now())
+        if(dayFragmentDate.value==null){
+            festivalViewModel.setDayFragmentDate(LocalDate.now())
+        }
+
         dayFragmentBinding.preDay.setOnClickListener {
             movePreDay()
         }

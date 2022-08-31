@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
         val color = ContextCompat.getColor(this, R.color.main_green)
         toolbar.setTitleTextColor(color)
         setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
 
 
 

@@ -20,6 +20,14 @@ class FestivalViewModel :ViewModel(){
 
     var openUrl : String = ""
 
+    private val _dayFragmentDate = MutableLiveData<LocalDate>()
+    val dayFragmentDate : LiveData<LocalDate>
+        get() = _dayFragmentDate
+
+    fun setDayFragmentDate(date: LocalDate){
+        _dayFragmentDate.postValue(date)
+    }
+
 
     fun getFestival(firstLocalDate : LocalDate, lastLocalDate : LocalDate) : LiveData<MutableList<FestivalDto>>{
         val firstDate = formatter.format(firstLocalDate)

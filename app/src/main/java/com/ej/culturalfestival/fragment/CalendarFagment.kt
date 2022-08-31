@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.viewpager2.widget.ViewPager2
 import com.ej.culturalfestival.MainActivity
 import com.ej.culturalfestival.adapter.ViewPagerAdapter
 import com.ej.culturalfestival.databinding.FragmentCalendarBinding
@@ -20,6 +21,7 @@ import java.time.format.DateTimeFormatter
 class CalendarFagment : Fragment() {
     val act : MainActivity by lazy {activity as MainActivity}
     lateinit var calendarFagmentBinding : FragmentCalendarBinding
+    lateinit var viewPager : ViewPager2
 
     private val tabTitleArray = arrayOf(
         "일별",
@@ -40,7 +42,7 @@ class CalendarFagment : Fragment() {
         // Inflate the layout for this fragment
         calendarFagmentBinding = FragmentCalendarBinding.inflate(LayoutInflater.from(container!!.context),container,false)
 
-        val viewPager = calendarFagmentBinding.viewpager2
+        viewPager = calendarFagmentBinding.viewpager2
         val tabLayout = calendarFagmentBinding.tabLayout
 
         tabLayout.addOnTabSelectedListener(object :TabLayout.OnTabSelectedListener{
@@ -56,7 +58,8 @@ class CalendarFagment : Fragment() {
             }
         })
 
-        viewPager.adapter = ViewPagerAdapter(act.supportFragmentManager,lifecycle)
+        val monthDayClickFun : (LocalDate) -> Unit = { date -> monthDayClick(date)}
+        viewPager.adapter = ViewPagerAdapter(act.supportFragmentManager,lifecycle,monthDayClickFun)
         viewPager.isUserInputEnabled =false
 
         viewPager.currentItem = 1
@@ -72,8 +75,9 @@ class CalendarFagment : Fragment() {
         return calendarFagmentBinding.root
     }
 
-
-
+    private fun monthDayClick(date: LocalDate) {
+        viewPager.currentItem = 0
+    }
 
 
     companion object{

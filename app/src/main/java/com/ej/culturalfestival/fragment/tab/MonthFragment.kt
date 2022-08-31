@@ -17,6 +17,7 @@ import com.ej.culturalfestival.adapter.MonthCalendarAdapter
 import com.ej.culturalfestival.databinding.FragmentMonthBinding
 import com.ej.culturalfestival.dto.FestivalDayInfoDto
 import com.ej.culturalfestival.dto.response.FestivalDto
+import com.ej.culturalfestival.fragment.CalendarFagment
 import com.ej.culturalfestival.util.CalendarUtil
 import com.ej.culturalfestival.util.CalendarUtil.Companion.formatter
 import com.ej.culturalfestival.viewmodel.FestivalViewModel
@@ -25,7 +26,9 @@ import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 
 
-class MonthFragment : Fragment() {
+class MonthFragment(
+    private val onClick : (LocalDate) -> Unit
+) : Fragment() {
 
 
 
@@ -47,7 +50,9 @@ class MonthFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+//        monthFragmentBinding = FragmentMonthBinding.inflate(inflater,container,false)
         monthFragmentBinding = FragmentMonthBinding.inflate(inflater,container,false)
+
 
         // 초기화
         monthYearText = monthFragmentBinding.monthYearText
@@ -192,6 +197,10 @@ class MonthFragment : Fragment() {
     }
     private fun calendarDayClick(date : LocalDate){
         Log.d("click","$date")
+        CalendarUtil.selectedDate = date
+        onClick(date)
+
+
     }
 
     private fun monthYearFromDate(date : LocalDate):String{
@@ -200,8 +209,8 @@ class MonthFragment : Fragment() {
     }
 
     companion object{
-        fun newInstance() : MonthFragment {
-            return MonthFragment()
+        fun newInstance(onClick : (LocalDate) -> Unit) : MonthFragment {
+            return MonthFragment(onClick)
         }
     }
 }

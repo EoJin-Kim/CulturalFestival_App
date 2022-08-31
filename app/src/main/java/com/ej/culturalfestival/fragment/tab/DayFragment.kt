@@ -44,11 +44,15 @@ class DayFragment : Fragment() {
         nowDayText = dayFragmentBinding.nowDayText
         nowDayText.text = dayFromDate(CalendarUtil.selectedDate)
 
-        getFestival()
 //        val result = festivalViewModel.getFestival(CalendarUtil.selectedDate,CalendarUtil.selectedDate)
 //        result.observe(viewLifecycleOwner){
 //            setRecycler(it)
 //        }
+        val dayFragmentDate = festivalViewModel.dayFragmentDate
+        dayFragmentDate.observe(viewLifecycleOwner){
+            getFestival(it)
+        }
+        festivalViewModel.setDayFragmentDate(LocalDate.now())
         dayFragmentBinding.preDay.setOnClickListener {
             movePreDay()
         }
@@ -61,22 +65,27 @@ class DayFragment : Fragment() {
         return dayFragmentBinding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+
+    }
+
     private fun movePreDay(){
         val moveDay = nowLocalDate.minusDays(1)
+        festivalViewModel.setDayFragmentDate(moveDay)
         val dateStr = dayFromDate(moveDay)
         nowLocalDate=moveDay
         dayFragmentBinding.nowDayText.text = dateStr
-        getFestival()
 
         // 뷰모델에서 해당 날짜 축제 가지고 오로 submit
     }
 
     private fun moveNextDay(){
         val moveDay = nowLocalDate.plusDays(1)
+        festivalViewModel.setDayFragmentDate(moveDay)
         val dateStr = dayFromDate(moveDay)
         nowLocalDate=moveDay
         dayFragmentBinding.nowDayText.text = dateStr
-        getFestival()
 
         // 뷰모델에서 해당 날짜 축제 가지고 오로 submit
     }
@@ -125,8 +134,8 @@ class DayFragment : Fragment() {
         return date.format(formatter)
     }
 
-    fun getFestival(){
-        val result = festivalViewModel.getFestival(nowLocalDate,nowLocalDate)
+    fun getFestival(date : LocalDate){
+        val result = festivalViewModel.getFestival(date,date)
         result.observe(viewLifecycleOwner){
             dayFragmentBinding.dayFestivalCount.text = "${it.size} 축제"
             setRecycler(it)

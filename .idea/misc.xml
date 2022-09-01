@@ -5,8 +5,11 @@
       <map>
         <entry key="..\:/Users/hfhsh/AndroidStudioProjects/CulturalFestival_App/app/src/main/res/layout/activity_main.xml" value="0.24895833333333334" />
         <entry key="..\:/Users/hfhsh/AndroidStudioProjects/CulturalFestival_App/app/src/main/res/layout/card_calendar.xml" value="0.2421875" />
+        <entry key="..\:/Users/hfhsh/AndroidStudioProjects/CulturalFestival_App/app/src/main/res/layout/fragment_blank.xml" value="0.3958333333333333" />
         <entry key="..\:/Users/hfhsh/AndroidStudioProjects/CulturalFestival_App/app/src/main/res/layout/fragment_calendar.xml" value="0.24895833333333334" />
         <entry key="..\:/Users/hfhsh/AndroidStudioProjects/CulturalFestival_App/app/src/main/res/layout/fragment_day.xml" value="0.22" />
+        <entry key="..\:/Users/hfhsh/AndroidStudioProjects/CulturalFestival_App/app/src/main/res/layout/fragment_dialog_month_calendar.xml" value="0.5536458333333333" />
+        <entry key="..\:/Users/hfhsh/AndroidStudioProjects/CulturalFestival_App/app/src/main/res/layout/fragment_dialog_week_calendar.xml" value="0.5536458333333333" />
         <entry key="..\:/Users/hfhsh/AndroidStudioProjects/CulturalFestival_App/app/src/main/res/layout/fragment_festival_dialog.xml" value="0.275" />
         <entry key="..\:/Users/hfhsh/AndroidStudioProjects/CulturalFestival_App/app/src/main/res/layout/fragment_month.xml" value="0.12129629629629629" />
         <entry key="..\:/Users/hfhsh/AndroidStudioProjects/CulturalFestival_App/app/src/main/res/layout/fragment_search.xml" value="0.24895833333333334" />

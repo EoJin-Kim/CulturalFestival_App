@@ -24,6 +24,16 @@ class FestivalViewModel :ViewModel(){
     val dayFragmentDate : LiveData<LocalDate>
         get() = _dayFragmentDate
 
+
+    private val _weekFragmentDate = MutableLiveData<LocalDate>()
+    val weekFragmentDate : LiveData<LocalDate>
+        get() = _weekFragmentDate
+
+    private val _monthFragmentDate = MutableLiveData<LocalDate>()
+    val monthFragmentDate : LiveData<LocalDate>
+        get() = _monthFragmentDate
+
+
     fun setDayFragmentDate(date: LocalDate){
         _dayFragmentDate.postValue(date)
     }

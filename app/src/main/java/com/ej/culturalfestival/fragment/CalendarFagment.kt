@@ -65,7 +65,7 @@ class CalendarFagment : Fragment() {
         viewPager.adapter = ViewPagerAdapter(act.supportFragmentManager,lifecycle,monthDayClickFun)
         viewPager.isUserInputEnabled =false
 
-        viewPager.currentItem = 1
+//        viewPager.currentItem = 1
 
 
         TabLayoutMediator(tabLayout,viewPager){ tab,position ->

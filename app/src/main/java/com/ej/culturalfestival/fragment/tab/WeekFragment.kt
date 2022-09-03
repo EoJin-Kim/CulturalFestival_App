@@ -53,6 +53,9 @@ class WeekFragment : Fragment() {
 
         val preBtn : Button = weekFragmentBinding.preWeek
         val nextBtn : Button = weekFragmentBinding.nextWeek
+
+        festivalViewModel.setWeekFragmentDate(LocalDate.now())
+
         recycler = weekFragmentBinding.weekRecycler
         preBtn.setOnClickListener {
             nowWeek = movePreWeek(nowWeek)
@@ -81,7 +84,7 @@ class WeekFragment : Fragment() {
             }
         }
 
-        nowWeek = setDayWeek(CalendarUtil.selectedDate)
+        nowWeek = setDayWeek(LocalDate.now())
 
         setTitleText()
 

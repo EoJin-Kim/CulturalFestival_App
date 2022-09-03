@@ -27,7 +27,7 @@ class DayFragment : Fragment() {
 
     val act : MainActivity by lazy { activity as MainActivity }
     val festivalViewModel : FestivalViewModel by lazy { ViewModelProvider(act).get(FestivalViewModel::class.java) }
-    val dialogMonthCalendarFragment: DialogMonthCalendarFragment by lazy { DialogMonthCalendarFragment.newInstance() }
+    lateinit var dialogMonthCalendarFragment: DialogMonthCalendarFragment
     var nowLocalDate : LocalDate = LocalDate.now()
 
     lateinit var dayFragmentBinding: FragmentDayBinding
@@ -45,12 +45,19 @@ class DayFragment : Fragment() {
         // Inflate the layout for this fragment
         dayFragmentBinding = FragmentDayBinding.inflate(inflater,container,false)
         nowDayText = dayFragmentBinding.nowDayText
-        nowDayText.text = dayFromDate(CalendarUtil.selectedDate)
+        nowDayText.text = dayFromDate(LocalDate.now())
 
 //        val result = festivalViewModel.getFestival(CalendarUtil.selectedDate,CalendarUtil.selectedDate)
 //        result.observe(viewLifecycleOwner){
 //            setRecycler(it)
 //        }
+
+
+        val dialogDayFun : (LocalDate) -> Unit = { date -> dialogDayClick(date)}
+        dialogMonthCalendarFragment = DialogMonthCalendarFragment.newInstance(
+            dialogDayFun
+        )
+
         dayFragmentBinding.nowDayText.setOnClickListener {
             dialogMonthCalendarFragment.show(act.supportFragmentManager,"축제 정보")
         }
@@ -84,9 +91,8 @@ class DayFragment : Fragment() {
         return dayFragmentBinding.root
     }
 
-    override fun onResume() {
-        super.onResume()
-
+    private fun dialogDayClick(date :LocalDate){
+        Log.d("click","click")
     }
 
     private fun movePreDay(){

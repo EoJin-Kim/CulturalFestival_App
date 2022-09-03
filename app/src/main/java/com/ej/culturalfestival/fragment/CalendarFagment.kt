@@ -72,7 +72,6 @@ class CalendarFagment : Fragment() {
             tab.text = tabTitleArray[position]
         }.attach()
 
-        CalendarUtil.selectedDate = LocalDate.now()
 
 
         return calendarFagmentBinding.root

@@ -35,7 +35,16 @@ class FestivalViewModel :ViewModel(){
 
 
     fun setDayFragmentDate(date: LocalDate){
-        _dayFragmentDate.postValue(date)
+        _dayFragmentDate.value = date
+    }
+
+    fun setWeekFragmentDate(date: LocalDate){
+        _weekFragmentDate.value = date
+    }
+
+    fun setMonthFragmentDate(date: LocalDate){
+
+        _monthFragmentDate.value = date
     }
 
 

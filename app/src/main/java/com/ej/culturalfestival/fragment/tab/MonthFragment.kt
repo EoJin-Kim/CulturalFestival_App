@@ -17,9 +17,9 @@ import com.ej.culturalfestival.adapter.MonthCalendarAdapter
 import com.ej.culturalfestival.databinding.FragmentMonthBinding
 import com.ej.culturalfestival.dto.FestivalDayInfoDto
 import com.ej.culturalfestival.dto.response.FestivalDto
-import com.ej.culturalfestival.fragment.CalendarFagment
 import com.ej.culturalfestival.util.CalendarUtil
 import com.ej.culturalfestival.util.CalendarUtil.Companion.formatter
+import com.ej.culturalfestival.util.CalendarUtil.Companion.yearMonthFromDate
 import com.ej.culturalfestival.viewmodel.FestivalViewModel
 import java.time.LocalDate
 import java.time.YearMonth
@@ -60,9 +60,15 @@ class MonthFragment(
         val preBtn : Button = monthFragmentBinding.preMonth
         val nextBtn : Button = monthFragmentBinding.nextMonth
 
+        festivalViewModel.setMonthFragmentDate(LocalDate.now())
+
         preBtn.setOnClickListener {
-            CalendarUtil.selectedDate = CalendarUtil.selectedDate.minusMonths(1)
-            val preDate = CalendarUtil.selectedDate
+
+            val nowDate = festivalViewModel.monthFragmentDate.value
+            val preDate = nowDate!!.minusMonths(1)
+
+            festivalViewModel.setMonthFragmentDate(preDate)
+
             val festivalList =getFestivalList(preDate)
             festivalList.observe(viewLifecycleOwner){
                 setMonthView(it)
@@ -70,8 +76,11 @@ class MonthFragment(
         }
 
         nextBtn.setOnClickListener {
-            CalendarUtil.selectedDate = CalendarUtil.selectedDate.plusMonths(1)
-            val nextDate = CalendarUtil.selectedDate
+            val nowDate = festivalViewModel.monthFragmentDate.value
+            val nextDate = nowDate!!.plusMonths(1)
+
+            festivalViewModel.setMonthFragmentDate(nextDate)
+
             val festivalList =getFestivalList(nextDate)
             festivalList.observe(viewLifecycleOwner){
                 setMonthView(it)
@@ -80,8 +89,7 @@ class MonthFragment(
         // 현재 날짜
 
 
-        val nowDate = CalendarUtil.selectedDate
-        val festivalList = getFestivalList(nowDate)
+        val festivalList = getFestivalList(festivalViewModel.monthFragmentDate.value!!)
         festivalList.observe(viewLifecycleOwner){
             setMonthView(it)
         }
@@ -102,11 +110,12 @@ class MonthFragment(
     }
 
     private fun setMonthView(festivalList : List<FestivalDto>) {
+        val nowDate = festivalViewModel.monthFragmentDate.value!!
         // 년월 텍스트뷰 셋팅
-        monthYearText.text = monthYearFromDate(CalendarUtil.selectedDate)
+        monthYearText.text = yearMonthFromDate(nowDate)
 
         // 해당 월 날짜 가져오기
-        val dayList = daysInMonthArray(CalendarUtil.selectedDate,festivalList)
+        val dayList = daysInMonthArray(nowDate,festivalList)
 
 
         val funOpenHompage : (LocalDate) -> Unit = {date -> calendarDayClick(date)}
@@ -134,7 +143,7 @@ class MonthFragment(
         val lastDay : Int = yearMonth.lengthOfMonth()
 
         // 해당 월의 첫 번째 날 가져오기 (예 4월1일)
-        val firstDay : LocalDate = CalendarUtil.selectedDate.withDayOfMonth(1)
+        val firstDay : LocalDate = date.withDayOfMonth(1)
 
         //첫 번째 날 요일 가져오기(월:1, 일:7)
         var dayOfWeek : Int = firstDay.dayOfWeek.value
@@ -178,7 +187,7 @@ class MonthFragment(
                     val festivalStartLocalDate = LocalDate.parse(festivalDto.fstvlStartDate, formatter);
                     val festivalEndLocalDate = LocalDate.parse(festivalDto.fstvlEndDate, formatter);
 
-                    val nowDayLocalDate = LocalDate.of(CalendarUtil.selectedDate.year,CalendarUtil.selectedDate.month,nowDay)
+                    val nowDayLocalDate = LocalDate.of(date.year,date.month,nowDay)
 
                     if(
                         (festivalStartLocalDate.isBefore(nowDayLocalDate) || festivalStartLocalDate.isEqual(nowDayLocalDate)) &&
@@ -187,7 +196,7 @@ class MonthFragment(
                         count++
                     }
                 }
-                val festivalDayInfoDto = FestivalDayInfoDto(LocalDate.of(CalendarUtil.selectedDate.year,CalendarUtil.selectedDate.month,i-dayOfWeek),count)
+                val festivalDayInfoDto = FestivalDayInfoDto(LocalDate.of(date.year,date.month,i-dayOfWeek),count)
                 dayList.add(festivalDayInfoDto)
                 nowDay++
             }
@@ -202,10 +211,7 @@ class MonthFragment(
 
     }
 
-    private fun monthYearFromDate(date : LocalDate):String{
-        val formatter : DateTimeFormatter = DateTimeFormatter.ofPattern("MM월 yyyy")
-        return date.format(formatter)
-    }
+
 
     companion object{
         fun newInstance(onClick : (LocalDate) -> Unit) : MonthFragment {

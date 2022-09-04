@@ -75,7 +75,8 @@ class DialogMonthCalendarFragment(
     }
 
     private fun setRecycler(date : LocalDate) {
-        val adapter = DialogMonthCalendarAdapter(dayOnclick)
+        val adapter = DialogMonthCalendarAdapter(dayOnclick,this)
+
         val dateList = daysInMonthArray(date)
 
         val dateDtoList = dateListTodateDtoList(dateList)

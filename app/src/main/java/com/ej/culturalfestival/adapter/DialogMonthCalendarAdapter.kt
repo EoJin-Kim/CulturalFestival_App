@@ -10,10 +10,12 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.ej.culturalfestival.R
 import com.ej.culturalfestival.dto.LocalDateDto
+import com.ej.culturalfestival.fragment.dialog.DialogMonthCalendarFragment
 import java.time.LocalDate
 
 class DialogMonthCalendarAdapter(
     private val onClick : (LocalDate) -> Unit,
+    private val dialogMonthCalendarFragment : DialogMonthCalendarFragment
 ) : ListAdapter<LocalDateDto, DialogMonthCalendarAdapter.MonthCalendarViewHolder>(DialogMonthCalendarDiffCallback) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MonthCalendarViewHolder {
         val view = LayoutInflater.from(parent.context)

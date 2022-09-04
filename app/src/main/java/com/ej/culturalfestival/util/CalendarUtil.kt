@@ -13,6 +13,11 @@ class CalendarUtil {
             val formatter : DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy년 MM월")
             return date.format(formatter)
         }
+        fun monthDayFromDate(date : LocalDate) : String{
+            val formatter : DateTimeFormatter = DateTimeFormatter.ofPattern("MM월 dd일")
+            return date.format(formatter)
+        }
+
         fun dateListTodateDtoList(
             dateList: MutableList<LocalDate?>,
         ) : MutableList<LocalDateDto>{

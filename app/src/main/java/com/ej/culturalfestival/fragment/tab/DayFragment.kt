@@ -18,6 +18,8 @@ import com.ej.culturalfestival.dto.response.FestivalDto
 import com.ej.culturalfestival.fragment.dialog.DialogMonthCalendarFragment
 import com.ej.culturalfestival.fragment.dialog.FestivalFragmentDialog
 import com.ej.culturalfestival.util.CalendarUtil
+import com.ej.culturalfestival.util.CalendarUtil.Companion.monthDayFromDate
+import com.ej.culturalfestival.util.CalendarUtil.Companion.yearMonthFromDate
 import com.ej.culturalfestival.viewmodel.FestivalViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -45,7 +47,7 @@ class DayFragment : Fragment() {
         // Inflate the layout for this fragment
         dayFragmentBinding = FragmentDayBinding.inflate(inflater,container,false)
         nowDayText = dayFragmentBinding.nowDayText
-        nowDayText.text = dayFromDate(LocalDate.now())
+        nowDayText.text = monthDayFromDate(LocalDate.now())
 
 //        val result = festivalViewModel.getFestival(CalendarUtil.selectedDate,CalendarUtil.selectedDate)
 //        result.observe(viewLifecycleOwner){
@@ -71,7 +73,7 @@ class DayFragment : Fragment() {
 
         dayFragmentDate.observe(viewLifecycleOwner){
             nowLocalDate = it
-            val dateStr = dayFromDate(it)
+            val dateStr = monthDayFromDate(it)
             dayFragmentBinding.nowDayText.text = dateStr
             getFestival(it)
         }
@@ -92,13 +94,19 @@ class DayFragment : Fragment() {
     }
 
     private fun dialogDayClick(date :LocalDate){
-        Log.d("click","click")
+        val result = festivalViewModel.getFestival(date,date)
+        result.observe(viewLifecycleOwner){
+            nowDayText.text = monthDayFromDate(date)
+            setRecycler(it)
+        }
+
+        Log.d("click","$date")
     }
 
     private fun movePreDay(){
         val moveDay = nowLocalDate.minusDays(1)
         festivalViewModel.setDayFragmentDate(moveDay)
-        val dateStr = dayFromDate(moveDay)
+        val dateStr = monthDayFromDate(moveDay)
         nowLocalDate=moveDay
         dayFragmentBinding.nowDayText.text = dateStr
 
@@ -108,7 +116,7 @@ class DayFragment : Fragment() {
     private fun moveNextDay(){
         val moveDay = nowLocalDate.plusDays(1)
         festivalViewModel.setDayFragmentDate(moveDay)
-        val dateStr = dayFromDate(moveDay)
+        val dateStr = monthDayFromDate(moveDay)
         nowLocalDate=moveDay
         dayFragmentBinding.nowDayText.text = dateStr
 
@@ -154,10 +162,7 @@ class DayFragment : Fragment() {
         recycler.adapter = adapter
     }
 
-    fun dayFromDate(date : LocalDate) : String{
-        val formatter : DateTimeFormatter = DateTimeFormatter.ofPattern("MM월 dd일")
-        return date.format(formatter)
-    }
+
 
     fun getFestival(date : LocalDate){
         val result = festivalViewModel.getFestival(date,date)

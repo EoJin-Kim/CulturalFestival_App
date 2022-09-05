@@ -20,7 +20,7 @@ class DialogMonthCalendarAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MonthCalendarViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.card_calendar,parent,false)
-        val holder = DialogMonthCalendarAdapter.MonthCalendarViewHolder(view, onClick)
+        val holder = DialogMonthCalendarAdapter.MonthCalendarViewHolder(view,dialogMonthCalendarFragment, onClick)
         return holder
     }
 
@@ -29,7 +29,7 @@ class DialogMonthCalendarAdapter(
         holder.bind(date,position)
     }
 
-    class MonthCalendarViewHolder(itemView : View, private val onClick : (LocalDate) -> Unit,): RecyclerView.ViewHolder(itemView){
+    class MonthCalendarViewHolder(itemView : View,private val dialogMonthCalendarFragment : DialogMonthCalendarFragment, private val onClick : (LocalDate) -> Unit,): RecyclerView.ViewHolder(itemView){
 
         private val parentView : View  = itemView.findViewById(R.id.parent_view)
         private val dayText  : TextView = itemView.findViewById(R.id.day_text)
@@ -38,6 +38,8 @@ class DialogMonthCalendarAdapter(
         private val noDateColorCode = "#B5F3C7"
 
         fun bind(dateDto : LocalDateDto,position : Int){
+
+
 
             dayCountText.visibility = View.GONE
             if (dateDto.date == null) {
@@ -49,6 +51,7 @@ class DialogMonthCalendarAdapter(
 
                 parentView.setOnClickListener {
                     onClick(dateDto.date)
+                    dialogMonthCalendarFragment.dismiss()
                 }
 
             }

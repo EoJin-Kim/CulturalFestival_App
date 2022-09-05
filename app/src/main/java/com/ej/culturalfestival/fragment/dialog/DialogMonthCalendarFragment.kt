@@ -29,9 +29,10 @@ class DialogMonthCalendarFragment(
     val act : MainActivity by lazy { activity as MainActivity }
     val festivalViewModel : FestivalViewModel by lazy { ViewModelProvider(act).get(FestivalViewModel::class.java) }
 
-    lateinit var dialogDateText : TextView
-
     lateinit var dialogMonthCalendarFragmentBinding : FragmentDialogMonthCalendarBinding
+
+    lateinit var dialogDateText : TextView
+    lateinit var dialogDayDate : LocalDate
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -43,7 +44,7 @@ class DialogMonthCalendarFragment(
     ): View? {
         // Inflate the layout for this fragment
         dialogMonthCalendarFragmentBinding = FragmentDialogMonthCalendarBinding.inflate(layoutInflater)
-        festivalViewModel.setMonthFragmentDate(LocalDate.now())
+        dialogDayDate = festivalViewModel.dayFragmentDate.value!!
 
 
         dialogDateText = dialogMonthCalendarFragmentBinding.dialogDateText
@@ -51,19 +52,18 @@ class DialogMonthCalendarFragment(
         dialogDateText.text = yearMonthFromDate(LocalDate.now())
 
         dialogMonthCalendarFragmentBinding.dialogPreBtn.setOnClickListener {
-            val nowDate = festivalViewModel.dayFragmentDate.value
-            val preDate = nowDate!!.minusMonths(1)
-            festivalViewModel.setDayFragmentDate(preDate)
-            dialogDateText.text = yearMonthFromDate(preDate)
-            setRecycler(preDate)
+
+            dialogDayDate = dialogDayDate.minusMonths(1)
+//            festivalViewModel.setDayFragmentDate(preDate)
+            dialogDateText.text = yearMonthFromDate(dialogDayDate)
+            setRecycler(dialogDayDate)
         }
 
         dialogMonthCalendarFragmentBinding.dialogNextBtn.setOnClickListener {
-            val nowDate = festivalViewModel.dayFragmentDate.value
-            val nextDate = nowDate!!.plusMonths(1)
-            festivalViewModel.setDayFragmentDate(nextDate)
-            dialogDateText.text = yearMonthFromDate(nextDate)
-            setRecycler(nextDate)
+            dialogDayDate = dialogDayDate.plusMonths(1)
+//            festivalViewModel.setDayFragmentDate(nextDate)
+            dialogDateText.text = yearMonthFromDate(dialogDayDate)
+            setRecycler(dialogDayDate)
         }
 
 

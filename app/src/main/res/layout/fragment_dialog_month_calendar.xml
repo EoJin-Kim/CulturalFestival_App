@@ -13,14 +13,14 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/dialog_pre_btn"
+            android:id="@+id/dialog_month_pre_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="이전" />
 
         <TextView
-            android:id="@+id/dialog_date_text"
+            android:id="@+id/dialog_month_date_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -28,7 +28,7 @@
             android:textAlignment="center" />
 
         <Button
-            android:id="@+id/dialog_next_btn"
+            android:id="@+id/dialog_month_next_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -38,6 +38,8 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/dialog_month_recycler"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent" >
+
+    </androidx.recyclerview.widget.RecyclerView>
 
 </LinearLayout>

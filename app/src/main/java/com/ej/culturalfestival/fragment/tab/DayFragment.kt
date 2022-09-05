@@ -61,6 +61,7 @@ class DayFragment : Fragment() {
         )
 
         dayFragmentBinding.nowDayText.setOnClickListener {
+            Log.d("click","click1")
             dialogMonthCalendarFragment.show(act.supportFragmentManager,"축제 정보")
         }
 
@@ -97,6 +98,7 @@ class DayFragment : Fragment() {
         val result = festivalViewModel.getFestival(date,date)
         result.observe(viewLifecycleOwner){
             nowDayText.text = monthDayFromDate(date)
+            festivalViewModel.setDayFragmentDate(date)
             setRecycler(it)
         }
 

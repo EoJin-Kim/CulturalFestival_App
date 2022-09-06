@@ -13,14 +13,14 @@
 
         <Button
             android:id="@+id/dialog_week_pre_btn"
-            android:layout_width="0에"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Button" />
 
         <TextView
             android:id="@+id/dialog_week_date_text"
-            android:layout_width="0에"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="0주차"
@@ -29,7 +29,7 @@
 
         <Button
             android:id="@+id/dialog_week_next_btn"
-            android:layout_width="0에"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Button" />

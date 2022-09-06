@@ -47,11 +47,11 @@ class DialogMonthCalendarFragment(
         dialogDayDate = festivalViewModel.dayFragmentDate.value!!
 
 
-        dialogDateText = dialogMonthCalendarFragmentBinding.dialogDateText
+        dialogDateText = dialogMonthCalendarFragmentBinding.dialogMonthDateText
 
         dialogDateText.text = yearMonthFromDate(LocalDate.now())
 
-        dialogMonthCalendarFragmentBinding.dialogPreBtn.setOnClickListener {
+        dialogMonthCalendarFragmentBinding.dialogMonthPreBtn.setOnClickListener {
 
             dialogDayDate = dialogDayDate.minusMonths(1)
 //            festivalViewModel.setDayFragmentDate(preDate)
@@ -59,7 +59,7 @@ class DialogMonthCalendarFragment(
             setRecycler(dialogDayDate)
         }
 
-        dialogMonthCalendarFragmentBinding.dialogNextBtn.setOnClickListener {
+        dialogMonthCalendarFragmentBinding.dialogMonthNextBtn.setOnClickListener {
             dialogDayDate = dialogDayDate.plusMonths(1)
 //            festivalViewModel.setDayFragmentDate(nextDate)
             dialogDateText.text = yearMonthFromDate(dialogDayDate)

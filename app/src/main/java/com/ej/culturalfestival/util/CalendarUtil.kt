@@ -1,7 +1,10 @@
 package com.ej.culturalfestival.util
 
 import com.ej.culturalfestival.dto.LocalDateDto
+import com.ej.culturalfestival.dto.StartEndDate
+import com.ej.culturalfestival.dto.response.WeekInfoDto
 import java.time.LocalDate
+import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 
 class CalendarUtil {
@@ -27,6 +30,70 @@ class CalendarUtil {
                 dateDtoList.add(LocalDateDto(localDate))
             }
             return dateDtoList
+        }
+
+        fun setDayWeek(date : LocalDate) : WeekInfoDto {
+
+            val yearMonth = YearMonth.from(date)
+
+            // 해당 월 마지막 날짜 가져오기(예 28, 30, 31)
+            val monthDayCnt : Int = yearMonth.lengthOfMonth()
+
+            // 해당 월의 첫 번째 날 가져오기 (예 4월1일)
+            val firstDay : LocalDate =date.withDayOfMonth(1)
+
+            //첫 번째 날 요일 가져오기(월:1, 일:7)
+            var dayOfWeek : Int = firstDay.dayOfWeek.value
+
+
+            if (dayOfWeek == 7) {
+                dayOfWeek = 0
+            }
+            val firstWeekCnt = 7-dayOfWeek
+            val lastWeekCnt = (monthDayCnt-firstWeekCnt)%7
+            val fullWeekDayCount = monthDayCnt-firstWeekCnt-lastWeekCnt
+
+            val nowDay = date.dayOfMonth
+
+            val startEndDateList :MutableList<StartEndDate> = mutableListOf()
+            // 첫 주
+            val firstStartEndDate= StartEndDate(
+                LocalDate.of(date.year,date.month,1),
+                LocalDate.of(date.year,date.month,firstWeekCnt)
+            )
+            startEndDateList.add(firstStartEndDate)
+
+            // 두번째 주부터 7일 완전한 주 마지막까지
+            for ( weekRow : Int in 1 until fullWeekDayCount/7+1){
+                val startDate = LocalDate.of(date.year,date.month,firstWeekCnt+(weekRow-1)*7 +1)
+                val endDate = LocalDate.of(date.year,date.month,firstWeekCnt+weekRow*7)
+                val startEndDate = StartEndDate(startDate,endDate)
+                startEndDateList.add(startEndDate)
+            }
+
+            // 마지막 완전하지 않은 주
+            if(lastWeekCnt!=0){
+                val startDate = LocalDate.of(date.year,date.month,date.lengthOfMonth()-lastWeekCnt+1)
+                val endDate = LocalDate.of(date.year,date.month,date.lengthOfMonth())
+                val startEndDate = StartEndDate(startDate,endDate)
+                startEndDateList.add(startEndDate)
+            }
+
+            var idx = 1
+            for (startEndDate in startEndDateList) {
+                if(
+                    date.isEqual(startEndDate.startDate) ||
+                    date.isEqual(startEndDate.endDate) ||
+                    (date.isAfter(startEndDate.startDate) && date.isBefore(startEndDate.endDate))
+                ){
+                    break
+                }
+                idx++
+            }
+            val weekInfoDto = WeekInfoDto(idx,startEndDateList)
+            return weekInfoDto
+
+
         }
 
     }

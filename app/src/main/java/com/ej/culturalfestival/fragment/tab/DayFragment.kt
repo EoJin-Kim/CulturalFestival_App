@@ -15,21 +15,17 @@ import com.ej.culturalfestival.adapter.DayCalendarAdapter
 import com.ej.culturalfestival.databinding.FragmentDayBinding
 import com.ej.culturalfestival.dto.FestivalDetailDto
 import com.ej.culturalfestival.dto.response.FestivalDto
-import com.ej.culturalfestival.fragment.dialog.DialogMonthCalendarFragment
-import com.ej.culturalfestival.fragment.dialog.FestivalFragmentDialog
-import com.ej.culturalfestival.util.CalendarUtil
+import com.ej.culturalfestival.fragment.dialog.DialogDayCalendarFragment
 import com.ej.culturalfestival.util.CalendarUtil.Companion.monthDayFromDate
-import com.ej.culturalfestival.util.CalendarUtil.Companion.yearMonthFromDate
 import com.ej.culturalfestival.viewmodel.FestivalViewModel
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 
 class DayFragment : Fragment() {
 
     val act : MainActivity by lazy { activity as MainActivity }
     val festivalViewModel : FestivalViewModel by lazy { ViewModelProvider(act).get(FestivalViewModel::class.java) }
-    lateinit var dialogMonthCalendarFragment: DialogMonthCalendarFragment
+    lateinit var dialogDayCalendarFragment: DialogDayCalendarFragment
     var nowLocalDate : LocalDate = LocalDate.now()
 
     lateinit var dayFragmentBinding: FragmentDayBinding
@@ -56,13 +52,13 @@ class DayFragment : Fragment() {
 
 
         val dialogDayFun : (LocalDate) -> Unit = { date -> dialogDayClick(date)}
-        dialogMonthCalendarFragment = DialogMonthCalendarFragment.newInstance(
+        dialogDayCalendarFragment = DialogDayCalendarFragment.newInstance(
             dialogDayFun
         )
 
         dayFragmentBinding.nowDayText.setOnClickListener {
             Log.d("click","click1")
-            dialogMonthCalendarFragment.show(act.supportFragmentManager,"축제 정보")
+            dialogDayCalendarFragment.show(act.supportFragmentManager,"축제 정보")
         }
 
 

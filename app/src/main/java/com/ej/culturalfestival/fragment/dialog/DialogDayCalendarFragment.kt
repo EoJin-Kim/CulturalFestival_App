@@ -12,9 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ej.culturalfestival.MainActivity
 import com.ej.culturalfestival.adapter.DialogMonthCalendarAdapter
-import com.ej.culturalfestival.databinding.FragmentDialogMonthCalendarBinding
-import com.ej.culturalfestival.dto.LocalDateDto
-import com.ej.culturalfestival.util.CalendarUtil
+import com.ej.culturalfestival.databinding.FragmentDialogDayCalendarBinding
 import com.ej.culturalfestival.util.CalendarUtil.Companion.dateListTodateDtoList
 import com.ej.culturalfestival.util.CalendarUtil.Companion.yearMonthFromDate
 import com.ej.culturalfestival.viewmodel.FestivalViewModel
@@ -22,14 +20,14 @@ import java.time.LocalDate
 import java.time.YearMonth
 
 
-class DialogMonthCalendarFragment(
-    private val dayOnclick : (LocalDate) -> Unit,
+class DialogDayCalendarFragment(
+    private val dayOnClick : (LocalDate) -> Unit,
 ) : DialogFragment() {
 
     val act : MainActivity by lazy { activity as MainActivity }
     val festivalViewModel : FestivalViewModel by lazy { ViewModelProvider(act).get(FestivalViewModel::class.java) }
 
-    lateinit var dialogMonthCalendarFragmentBinding : FragmentDialogMonthCalendarBinding
+    lateinit var dialogDayCalendarFragmentBinding : FragmentDialogDayCalendarBinding
 
     lateinit var dialogDateText : TextView
     lateinit var dialogDayDate : LocalDate
@@ -43,15 +41,15 @@ class DialogMonthCalendarFragment(
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        dialogMonthCalendarFragmentBinding = FragmentDialogMonthCalendarBinding.inflate(layoutInflater)
+        dialogDayCalendarFragmentBinding = FragmentDialogDayCalendarBinding.inflate(layoutInflater)
         dialogDayDate = festivalViewModel.dayFragmentDate.value!!
 
 
-        dialogDateText = dialogMonthCalendarFragmentBinding.dialogMonthDateText
+        dialogDateText = dialogDayCalendarFragmentBinding.dialogDayDateText
 
         dialogDateText.text = yearMonthFromDate(LocalDate.now())
 
-        dialogMonthCalendarFragmentBinding.dialogMonthPreBtn.setOnClickListener {
+        dialogDayCalendarFragmentBinding.dialogDayPreBtn.setOnClickListener {
 
             dialogDayDate = dialogDayDate.minusMonths(1)
 //            festivalViewModel.setDayFragmentDate(preDate)
@@ -59,7 +57,7 @@ class DialogMonthCalendarFragment(
             setRecycler(dialogDayDate)
         }
 
-        dialogMonthCalendarFragmentBinding.dialogMonthNextBtn.setOnClickListener {
+        dialogDayCalendarFragmentBinding.dialogDayNextBtn.setOnClickListener {
             dialogDayDate = dialogDayDate.plusMonths(1)
 //            festivalViewModel.setDayFragmentDate(nextDate)
             dialogDateText.text = yearMonthFromDate(dialogDayDate)
@@ -71,11 +69,11 @@ class DialogMonthCalendarFragment(
 
         setRecycler(festivalViewModel.dayFragmentDate.value!!)
 
-        return dialogMonthCalendarFragmentBinding.root
+        return dialogDayCalendarFragmentBinding.root
     }
 
     private fun setRecycler(date : LocalDate) {
-        val adapter = DialogMonthCalendarAdapter(dayOnclick,this)
+        val adapter = DialogMonthCalendarAdapter(dayOnClick,this)
 
         val dateList = daysInMonthArray(date)
 
@@ -85,7 +83,7 @@ class DialogMonthCalendarFragment(
         // 레이아웃 설정 (열 7개)
         val manager: RecyclerView.LayoutManager = GridLayoutManager(requireContext(), 7)
 
-        val recyclerView = dialogMonthCalendarFragmentBinding.dialogMonthRecycler
+        val recyclerView = dialogDayCalendarFragmentBinding.dialogMonthRecycler
         // 레이아웃 적용
         recyclerView.layoutManager = manager
 
@@ -154,8 +152,8 @@ class DialogMonthCalendarFragment(
 
     companion object {
 
-        fun newInstance(dayOnclick : (LocalDate) -> Unit) : DialogMonthCalendarFragment{
-            return DialogMonthCalendarFragment(
+        fun newInstance(dayOnclick : (LocalDate) -> Unit) : DialogDayCalendarFragment{
+            return DialogDayCalendarFragment(
                 dayOnclick
             )
         }

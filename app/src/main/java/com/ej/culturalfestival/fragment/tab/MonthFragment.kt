@@ -14,9 +14,13 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ej.culturalfestival.MainActivity
 import com.ej.culturalfestival.adapter.MonthCalendarAdapter
+import com.ej.culturalfestival.databinding.FragmentDialogMonthCalendarBinding
 import com.ej.culturalfestival.databinding.FragmentMonthBinding
 import com.ej.culturalfestival.dto.FestivalDayInfoDto
+import com.ej.culturalfestival.dto.StartEndDate
 import com.ej.culturalfestival.dto.response.FestivalDto
+import com.ej.culturalfestival.fragment.dialog.DialogMonthCalendarFragment
+import com.ej.culturalfestival.fragment.dialog.DialogWeekCalendarFragment
 import com.ej.culturalfestival.util.CalendarUtil
 import com.ej.culturalfestival.util.CalendarUtil.Companion.formatter
 import com.ej.culturalfestival.util.CalendarUtil.Companion.yearMonthFromDate
@@ -40,6 +44,7 @@ class MonthFragment(
 
 
     lateinit var monthFragmentBinding : FragmentMonthBinding
+    lateinit var dialogMonthCalendarFragment : DialogMonthCalendarFragment
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -61,7 +66,15 @@ class MonthFragment(
         val nextBtn : Button = monthFragmentBinding.nextMonth
 
         festivalViewModel.setMonthFragmentDate(LocalDate.now())
+        monthYearText.text = yearMonthFromDate(LocalDate.now())
 
+        val dialogMonthFun : (Int) -> Unit = { month -> dialogMonthClick(month)}
+        dialogMonthCalendarFragment = DialogMonthCalendarFragment.newInstance(
+            dialogMonthFun
+        )
+        monthYearText.setOnClickListener {
+            dialogMonthCalendarFragment.show(act.supportFragmentManager, "월 dialog")
+        }
         preBtn.setOnClickListener {
 
             val nowDate = festivalViewModel.monthFragmentDate.value
@@ -100,6 +113,9 @@ class MonthFragment(
 
         return monthFragmentBinding.root
     }
+    private fun dialogMonthClick(month: Int) {
+
+    }
 
     private fun getFestivalList(date: LocalDate): LiveData<MutableList<FestivalDto>> {
         val firstLocalDate = LocalDate.of(date.year, date.month, 1)
@@ -112,7 +128,7 @@ class MonthFragment(
     private fun setMonthView(festivalList : List<FestivalDto>) {
         val nowDate = festivalViewModel.monthFragmentDate.value!!
         // 년월 텍스트뷰 셋팅
-        monthYearText.text = yearMonthFromDate(nowDate)
+
 
         // 해당 월 날짜 가져오기
         val dayList = daysInMonthArray(nowDate,festivalList)

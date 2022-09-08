@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ej.culturalfestival.MainActivity
+import com.ej.culturalfestival.adapter.DialogDayCalendarAdapter
 import com.ej.culturalfestival.adapter.DialogMonthCalendarAdapter
 import com.ej.culturalfestival.databinding.FragmentDialogDayCalendarBinding
 import com.ej.culturalfestival.util.CalendarUtil.Companion.dateListTodateDtoList
@@ -73,7 +74,7 @@ class DialogDayCalendarFragment(
     }
 
     private fun setRecycler(date : LocalDate) {
-        val adapter = DialogMonthCalendarAdapter(dayOnClick,this)
+        val adapter = DialogDayCalendarAdapter(dayOnClick,this)
 
         val dateList = daysInMonthArray(date)
 

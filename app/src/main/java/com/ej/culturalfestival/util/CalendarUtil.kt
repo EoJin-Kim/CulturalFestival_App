@@ -37,13 +37,13 @@ class CalendarUtil {
             val yearMonth = YearMonth.from(date)
 
             // 해당 월 마지막 날짜 가져오기(예 28, 30, 31)
-            val monthDayCnt : Int = yearMonth.lengthOfMonth()
+            val monthDayCnt : kotlin.Int = yearMonth.lengthOfMonth()
 
             // 해당 월의 첫 번째 날 가져오기 (예 4월1일)
             val firstDay : LocalDate =date.withDayOfMonth(1)
 
             //첫 번째 날 요일 가져오기(월:1, 일:7)
-            var dayOfWeek : Int = firstDay.dayOfWeek.value
+            var dayOfWeek : kotlin.Int = firstDay.dayOfWeek.value
 
 
             if (dayOfWeek == 7) {
@@ -64,7 +64,7 @@ class CalendarUtil {
             startEndDateList.add(firstStartEndDate)
 
             // 두번째 주부터 7일 완전한 주 마지막까지
-            for ( weekRow : Int in 1 until fullWeekDayCount/7+1){
+            for ( weekRow : kotlin.Int in 1 until fullWeekDayCount/7+1){
                 val startDate = LocalDate.of(date.year,date.month,firstWeekCnt+(weekRow-1)*7 +1)
                 val endDate = LocalDate.of(date.year,date.month,firstWeekCnt+weekRow*7)
                 val startEndDate = StartEndDate(startDate,endDate)

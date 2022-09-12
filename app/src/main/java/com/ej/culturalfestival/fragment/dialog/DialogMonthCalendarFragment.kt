@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.ej.culturalfestival.R
 import com.ej.culturalfestival.adapter.DialogMonthCalendarAdapter
 import com.ej.culturalfestival.databinding.FragmentDialogMonthCalendarBinding
@@ -47,11 +49,16 @@ class DialogMonthCalendarFragment(
     private fun setRecycler() {
         val adapter = DialogMonthCalendarAdapter(dialogMonthClick,this)
         val arrayList = mutableListOf<Int>()
-        for (i in 1 until 9) {
+        for (i in 1 until 13) {
             arrayList.add(i)
         }
+        adapter.submitList(arrayList)
+
 
         val recycler = dialogMonthCalendarFragmentBinding.dialogMonthRecycler
+        val manager = GridLayoutManager(requireContext(), 3)
+        recycler.adapter = adapter
+        recycler.layoutManager = manager
     }
 
     companion object {

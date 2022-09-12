@@ -48,7 +48,7 @@ class DialogDayCalendarFragment(
 
         dialogDateText = dialogDayCalendarFragmentBinding.dialogDayDateText
 
-        dialogDateText.text = yearMonthFromDate(LocalDate.now())
+        dialogDateText.text = yearMonthFromDate(dialogDayDate)
 
         dialogDayCalendarFragmentBinding.dialogDayPreBtn.setOnClickListener {
 

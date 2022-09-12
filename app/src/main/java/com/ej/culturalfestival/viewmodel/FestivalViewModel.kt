@@ -3,9 +3,9 @@ package com.ej.culturalfestival.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.ej.culturalfestival.api.FestivalApi
 import com.ej.culturalfestival.api.FestivalFetchr
 import com.ej.culturalfestival.dto.response.FestivalDto
+import com.ej.culturalfestival.dto.WeekInfoDto
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -25,8 +25,8 @@ class FestivalViewModel :ViewModel(){
         get() = _dayFragmentDate
 
 
-    private val _weekFragmentDate = MutableLiveData<LocalDate>()
-    val weekFragmentDate : LiveData<LocalDate>
+    private val _weekFragmentDate = MutableLiveData<WeekInfoDto>()
+    val weekFragmentDate : LiveData<WeekInfoDto>
         get() = _weekFragmentDate
 
     private val _monthFragmentDate = MutableLiveData<LocalDate>()
@@ -38,8 +38,8 @@ class FestivalViewModel :ViewModel(){
         _dayFragmentDate.value = date
     }
 
-    fun setWeekFragmentDate(date: LocalDate){
-        _weekFragmentDate.value = date
+    fun setWeekFragmentDate(weekInfoDto: WeekInfoDto){
+        _weekFragmentDate.value = weekInfoDto
     }
 
     fun setMonthFragmentDate(date: LocalDate){

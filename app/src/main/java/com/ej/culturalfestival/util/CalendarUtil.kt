@@ -2,7 +2,7 @@ package com.ej.culturalfestival.util
 
 import com.ej.culturalfestival.dto.LocalDateDto
 import com.ej.culturalfestival.dto.StartEndDate
-import com.ej.culturalfestival.dto.response.WeekInfoDto
+import com.ej.culturalfestival.dto.WeekInfoDto
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
@@ -93,6 +93,24 @@ class CalendarUtil {
             val weekInfoDto = WeekInfoDto(idx,startEndDateList)
             return weekInfoDto
 
+
+        }
+        fun setWeekTitleText(nowWeek : WeekInfoDto) : String{
+            val formatter : DateTimeFormatter = DateTimeFormatter.ofPattern("MM")
+            val monthStr = nowWeek.startEndDateList[0].startDate.format(formatter)
+            return "${monthStr}월 ${nowWeek.weekRow}주"
+        }
+
+        fun moveNextWeek(weekInfoDto: WeekInfoDto) : WeekInfoDto {
+            if (weekInfoDto.weekRow == weekInfoDto.startEndDateList.size) {
+                val nextWeekInfoDto = setDayWeek(weekInfoDto.startEndDateList[0].startDate.plusMonths(1))
+                nextWeekInfoDto.weekRow = 1
+                return nextWeekInfoDto
+            }
+            else {
+                weekInfoDto.weekRow++
+                return weekInfoDto
+            }
 
         }
 

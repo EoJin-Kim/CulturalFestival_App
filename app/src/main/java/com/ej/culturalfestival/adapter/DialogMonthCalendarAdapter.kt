@@ -3,6 +3,7 @@ package com.ej.culturalfestival.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -20,7 +21,7 @@ class DialogMonthCalendarAdapter(
         viewType: kotlin.Int
     ): MonthCalendarViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.card_calendar,parent,false)
+            .inflate(R.layout.card_month_calendar,parent,false)
         val holder = DialogMonthCalendarAdapter.MonthCalendarViewHolder(view,dialogMonthCalendarFragment, onClick)
         return holder
     }
@@ -31,10 +32,14 @@ class DialogMonthCalendarAdapter(
     }
 
     class MonthCalendarViewHolder(itemView : View, private val dialogMonthCalendarFragment : DialogMonthCalendarFragment, private val onClick : (Int) -> Unit,): RecyclerView.ViewHolder(itemView){
+        val monthText : TextView = itemView.findViewById(R.id.dialog_month)
 
+        fun bind(month: Int, position: Int) {
+            monthText.text = "${month}월"
 
-        fun bind(month: Int, position: kotlin.Int) {
-
+            monthText.setOnClickListener {
+                onClick(month)
+            }
         }
     }
 }

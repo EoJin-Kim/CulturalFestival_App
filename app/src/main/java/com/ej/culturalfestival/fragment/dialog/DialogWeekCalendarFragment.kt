@@ -39,8 +39,9 @@ class DialogWeekCalendarFragment(private val weekOnClick : (StartEndDate) -> Uni
         // Inflate the layout for this fragment
         dialogWeekCalendarFragmentBinding = FragmentDialogWeekCalendarBinding.inflate(layoutInflater)
 
-        val weekInfo= CalendarUtil.setDayWeek(festivalViewModel.weekFragmentDate.value!!)
+        val weekInfo= CalendarUtil.setDayWeek(LocalDate.now())
         setRecycler(weekInfo.startEndDateList)
+        dialogWeekCalendarFragmentBinding.dialogWeekDateText.text = CalendarUtil.setWeekTitleText(festivalViewModel.weekFragmentDate.value!!)
 
 
         return dialogWeekCalendarFragmentBinding.root

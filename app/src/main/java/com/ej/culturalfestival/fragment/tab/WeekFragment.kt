@@ -18,16 +18,16 @@ import com.ej.culturalfestival.dto.FestivalSummaryDto
 import com.ej.culturalfestival.dto.FestivalWeekInfoDto
 import com.ej.culturalfestival.dto.StartEndDate
 import com.ej.culturalfestival.dto.response.FestivalDto
-import com.ej.culturalfestival.dto.response.WeekInfoDto
+import com.ej.culturalfestival.dto.WeekInfoDto
 import com.ej.culturalfestival.fragment.dialog.DialogWeekCalendarFragment
 import com.ej.culturalfestival.fragment.dialog.FestivalFragmentDialog
 import com.ej.culturalfestival.util.CalendarUtil
 import com.ej.culturalfestival.util.CalendarUtil.Companion.formatter
+import com.ej.culturalfestival.util.CalendarUtil.Companion.moveNextWeek
 import com.ej.culturalfestival.util.CalendarUtil.Companion.setDayWeek
+import com.ej.culturalfestival.util.CalendarUtil.Companion.setWeekTitleText
 import com.ej.culturalfestival.viewmodel.FestivalViewModel
 import java.time.LocalDate
-import java.time.YearMonth
-import java.time.format.DateTimeFormatter
 
 
 class WeekFragment : Fragment() {
@@ -61,7 +61,8 @@ class WeekFragment : Fragment() {
         val nextBtn : Button = weekFragmentBinding.nextWeek
         val weekText : TextView = weekFragmentBinding.weekTitle
 
-        festivalViewModel.setWeekFragmentDate(LocalDate.now())
+        nowWeek = CalendarUtil.setDayWeek(LocalDate.now())
+        festivalViewModel.setWeekFragmentDate(nowWeek)
 
         val dialogWeekFun : (StartEndDate) -> Unit = { startEndDate -> dialogWeekClick(startEndDate)}
         dialogWeekCalendarFragment = DialogWeekCalendarFragment.newInstance(
@@ -73,8 +74,8 @@ class WeekFragment : Fragment() {
 
         recycler = weekFragmentBinding.weekRecycler
         preBtn.setOnClickListener {
-            nowWeek = movePreWeek(nowWeek)
-            setTitleText()
+            nowWeek = moveNextWeek(nowWeek)
+            weekText.text = setWeekTitleText(nowWeek)
 
             val result = festivalViewModel.getFestival(
                 nowWeek.startEndDateList[nowWeek.weekRow-1].startDate,
@@ -88,7 +89,7 @@ class WeekFragment : Fragment() {
 
         nextBtn.setOnClickListener {
             nowWeek = moveNextWeek(nowWeek)
-            setTitleText()
+            weekText.text = setWeekTitleText(nowWeek)
             val result = festivalViewModel.getFestival(
                 nowWeek.startEndDateList[nowWeek.weekRow-1].startDate,
                 nowWeek.startEndDateList[nowWeek.weekRow-1].endDate
@@ -99,9 +100,9 @@ class WeekFragment : Fragment() {
             }
         }
 
-        nowWeek = CalendarUtil.setDayWeek(LocalDate.now())
 
-        setTitleText()
+
+        weekText.text = setWeekTitleText(nowWeek)
 
         val result = festivalViewModel.getFestival(
             nowWeek.startEndDateList[nowWeek.weekRow-1].startDate,
@@ -117,7 +118,7 @@ class WeekFragment : Fragment() {
 
     }
 
-    private fun movePreWeek(weekInfoDto: WeekInfoDto) : WeekInfoDto{
+    private fun movePreWeek(weekInfoDto: WeekInfoDto) : WeekInfoDto {
         if (weekInfoDto.weekRow != 1) {
             weekInfoDto.weekRow--
             return weekInfoDto
@@ -130,21 +131,10 @@ class WeekFragment : Fragment() {
 
     }
 
-    private fun moveNextWeek(weekInfoDto: WeekInfoDto) : WeekInfoDto{
-        if (weekInfoDto.weekRow == weekInfoDto.startEndDateList.size) {
-            val nextWeekInfoDto = setDayWeek(weekInfoDto.startEndDateList[0].startDate.plusMonths(1))
-            nextWeekInfoDto.weekRow = 1
-            return nextWeekInfoDto
-        }
-        else {
-            weekInfoDto.weekRow++
-            return weekInfoDto
-        }
-
-    }
 
 
-    private fun daysInWeekArray(weekInfo: WeekInfoDto,festivalList : MutableList<FestivalDto>) : MutableList<FestivalWeekInfoDto>{
+
+    private fun daysInWeekArray(weekInfo: WeekInfoDto, festivalList : MutableList<FestivalDto>) : MutableList<FestivalWeekInfoDto>{
         val festivalWeekInfoList : MutableList<FestivalWeekInfoDto> = mutableListOf()
         val startDay = weekInfo.startEndDateList[weekInfo.weekRow-1].startDate.dayOfMonth
         val endDay = weekInfo.startEndDateList[weekInfo.weekRow-1].endDate.dayOfMonth
@@ -216,11 +206,7 @@ class WeekFragment : Fragment() {
         return weekList
     }
 
-    private fun setTitleText(){
-        val formatter : DateTimeFormatter = DateTimeFormatter.ofPattern("MM")
-        val monthStr = nowWeek.startEndDateList[0].startDate.format(formatter)
-        weekFragmentBinding.weekTitle.text = "${monthStr}월 ${nowWeek.weekRow}주"
-    }
+
 
     private fun festivalClickEvent(id : Long){
         val result = festivalViewModel.getFestival(id)

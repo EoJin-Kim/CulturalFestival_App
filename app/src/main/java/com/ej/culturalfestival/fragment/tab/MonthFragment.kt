@@ -114,7 +114,7 @@ class MonthFragment(
         return monthFragmentBinding.root
     }
     private fun dialogMonthClick(month: Int) {
-
+        Log.d("click","click")
     }
 
     private fun getFestivalList(date: LocalDate): LiveData<MutableList<FestivalDto>> {

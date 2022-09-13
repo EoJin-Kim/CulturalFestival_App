@@ -97,7 +97,7 @@ class CalendarUtil {
         }
         fun setWeekTitleText(nowWeek : WeekInfoDto) : String{
             val formatter : DateTimeFormatter = DateTimeFormatter.ofPattern("MM")
-            val monthStr = nowWeek.startEndDateList[0].startDate.format(formatter)
+            val monthStr = nowWeek.startEndDateList[nowWeek.weekRow-1].startDate.format(formatter)
             return "${monthStr}월 ${nowWeek.weekRow}주"
         }
 
@@ -109,6 +109,19 @@ class CalendarUtil {
             }
             else {
                 weekInfoDto.weekRow++
+                return weekInfoDto
+            }
+
+        }
+
+        fun movePreWeek(weekInfoDto: WeekInfoDto) : WeekInfoDto {
+            if (weekInfoDto.weekRow == 1) {
+                val nextWeekInfoDto = setDayWeek(weekInfoDto.startEndDateList[0].startDate.minusMonths(1))
+                nextWeekInfoDto.weekRow = nextWeekInfoDto.startEndDateList.size
+                return nextWeekInfoDto
+            }
+            else {
+                weekInfoDto.weekRow--
                 return weekInfoDto
             }
 

@@ -1,6 +1,7 @@
 package com.ej.culturalfestival.fragment.tab
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -24,6 +25,7 @@ import com.ej.culturalfestival.fragment.dialog.FestivalFragmentDialog
 import com.ej.culturalfestival.util.CalendarUtil
 import com.ej.culturalfestival.util.CalendarUtil.Companion.formatter
 import com.ej.culturalfestival.util.CalendarUtil.Companion.moveNextWeek
+import com.ej.culturalfestival.util.CalendarUtil.Companion.movePreWeek
 import com.ej.culturalfestival.util.CalendarUtil.Companion.setDayWeek
 import com.ej.culturalfestival.util.CalendarUtil.Companion.setWeekTitleText
 import com.ej.culturalfestival.viewmodel.FestivalViewModel
@@ -64,7 +66,7 @@ class WeekFragment : Fragment() {
         nowWeek = CalendarUtil.setDayWeek(LocalDate.now())
         festivalViewModel.setWeekFragmentDate(nowWeek)
 
-        val dialogWeekFun : (StartEndDate) -> Unit = { startEndDate -> dialogWeekClick(startEndDate)}
+        val dialogWeekFun : (StartEndDate,Int) -> Unit = { startEndDate ,position-> dialogWeekClick(startEndDate,position)}
         dialogWeekCalendarFragment = DialogWeekCalendarFragment.newInstance(
             dialogWeekFun
         )
@@ -74,7 +76,8 @@ class WeekFragment : Fragment() {
 
         recycler = weekFragmentBinding.weekRecycler
         preBtn.setOnClickListener {
-            nowWeek = moveNextWeek(nowWeek)
+            nowWeek = movePreWeek(nowWeek)
+            festivalViewModel.setWeekFragmentDate(nowWeek)
             weekText.text = setWeekTitleText(nowWeek)
 
             val result = festivalViewModel.getFestival(
@@ -89,6 +92,7 @@ class WeekFragment : Fragment() {
 
         nextBtn.setOnClickListener {
             nowWeek = moveNextWeek(nowWeek)
+            festivalViewModel.setWeekFragmentDate(nowWeek)
             weekText.text = setWeekTitleText(nowWeek)
             val result = festivalViewModel.getFestival(
                 nowWeek.startEndDateList[nowWeek.weekRow-1].startDate,
@@ -114,22 +118,12 @@ class WeekFragment : Fragment() {
 
         return weekFragmentBinding.root
     }
-    private fun dialogWeekClick(startEndDate: StartEndDate) {
-
+    private fun dialogWeekClick(startEndDate: StartEndDate, position : Int) {
+        Log.d("click","click")
+        Log.d("click","${startEndDate.startDate} ~ ${startEndDate.endDate}")
     }
 
-    private fun movePreWeek(weekInfoDto: WeekInfoDto) : WeekInfoDto {
-        if (weekInfoDto.weekRow != 1) {
-            weekInfoDto.weekRow--
-            return weekInfoDto
-        }
-        else{
-            val preWeekInfoDto = setDayWeek(weekInfoDto.startEndDateList[0].startDate.minusMonths(1))
-            preWeekInfoDto.weekRow = preWeekInfoDto.startEndDateList.size
-            return preWeekInfoDto
-        }
 
-    }
 
 
 

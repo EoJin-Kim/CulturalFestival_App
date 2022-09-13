@@ -22,7 +22,7 @@ import com.ej.culturalfestival.viewmodel.FestivalViewModel
 import java.time.LocalDate
 
 
-class DialogWeekCalendarFragment(private val weekOnClick : (StartEndDate) -> Unit) : DialogFragment() {
+class DialogWeekCalendarFragment(private val weekOnClick : (StartEndDate,Int) -> Unit) : DialogFragment() {
 
     val act : MainActivity by lazy { activity as MainActivity }
     val festivalViewModel : FestivalViewModel by lazy { ViewModelProvider(act).get(FestivalViewModel::class.java) }
@@ -38,11 +38,10 @@ class DialogWeekCalendarFragment(private val weekOnClick : (StartEndDate) -> Uni
     ): View? {
         // Inflate the layout for this fragment
         dialogWeekCalendarFragmentBinding = FragmentDialogWeekCalendarBinding.inflate(layoutInflater)
+        val weekInfoLive = festivalViewModel.weekFragmentDate
+        setRecycler(weekInfoLive.value!!.startEndDateList)
 
-        val weekInfo= CalendarUtil.setDayWeek(LocalDate.now())
-        setRecycler(weekInfo.startEndDateList)
         dialogWeekCalendarFragmentBinding.dialogWeekDateText.text = CalendarUtil.setWeekTitleText(festivalViewModel.weekFragmentDate.value!!)
-
 
         return dialogWeekCalendarFragmentBinding.root
     }
@@ -70,7 +69,7 @@ class DialogWeekCalendarFragment(private val weekOnClick : (StartEndDate) -> Uni
 
     companion object {
 
-        fun newInstance(dialogWeekFun : (StartEndDate) -> Unit) : DialogWeekCalendarFragment{
+        fun newInstance(dialogWeekFun : (StartEndDate,Int) -> Unit) : DialogWeekCalendarFragment{
             return DialogWeekCalendarFragment(dialogWeekFun)
         }
 

@@ -24,9 +24,8 @@ import com.ej.culturalfestival.fragment.dialog.DialogWeekCalendarFragment
 import com.ej.culturalfestival.fragment.dialog.FestivalFragmentDialog
 import com.ej.culturalfestival.util.CalendarUtil
 import com.ej.culturalfestival.util.CalendarUtil.Companion.formatter
-import com.ej.culturalfestival.util.CalendarUtil.Companion.moveNextWeek
-import com.ej.culturalfestival.util.CalendarUtil.Companion.movePreWeek
-import com.ej.culturalfestival.util.CalendarUtil.Companion.setDayWeek
+import com.ej.culturalfestival.util.CalendarUtil.Companion.moveNextOneWeek
+import com.ej.culturalfestival.util.CalendarUtil.Companion.movePreOneWeek
 import com.ej.culturalfestival.util.CalendarUtil.Companion.setWeekTitleText
 import com.ej.culturalfestival.viewmodel.FestivalViewModel
 import java.time.LocalDate
@@ -76,7 +75,7 @@ class WeekFragment : Fragment() {
 
         recycler = weekFragmentBinding.weekRecycler
         preBtn.setOnClickListener {
-            nowWeek = movePreWeek(nowWeek)
+            nowWeek = movePreOneWeek(nowWeek)
             festivalViewModel.setWeekFragmentDate(nowWeek)
             weekText.text = setWeekTitleText(nowWeek)
 
@@ -91,7 +90,7 @@ class WeekFragment : Fragment() {
         }
 
         nextBtn.setOnClickListener {
-            nowWeek = moveNextWeek(nowWeek)
+            nowWeek = moveNextOneWeek(nowWeek)
             festivalViewModel.setWeekFragmentDate(nowWeek)
             weekText.text = setWeekTitleText(nowWeek)
             val result = festivalViewModel.getFestival(

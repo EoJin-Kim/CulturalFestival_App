@@ -101,7 +101,7 @@ class CalendarUtil {
             return "${monthStr}월 ${nowWeek.weekRow}주"
         }
 
-        fun moveNextWeek(weekInfoDto: WeekInfoDto) : WeekInfoDto {
+        fun moveNextOneWeek(weekInfoDto: WeekInfoDto) : WeekInfoDto {
             if (weekInfoDto.weekRow == weekInfoDto.startEndDateList.size) {
                 val nextWeekInfoDto = setDayWeek(weekInfoDto.startEndDateList[0].startDate.plusMonths(1))
                 nextWeekInfoDto.weekRow = 1
@@ -113,8 +113,14 @@ class CalendarUtil {
             }
 
         }
+        
+        fun moveNextOneMonth(weekInfoDto: WeekInfoDto) : WeekInfoDto {
+            val nextWeekInfoDto = setDayWeek(weekInfoDto.startEndDateList[0].startDate.plusMonths(1))
+            nextWeekInfoDto.weekRow = 1
+            return nextWeekInfoDto
+        }
 
-        fun movePreWeek(weekInfoDto: WeekInfoDto) : WeekInfoDto {
+        fun movePreOneWeek(weekInfoDto: WeekInfoDto) : WeekInfoDto {
             if (weekInfoDto.weekRow == 1) {
                 val nextWeekInfoDto = setDayWeek(weekInfoDto.startEndDateList[0].startDate.minusMonths(1))
                 nextWeekInfoDto.weekRow = nextWeekInfoDto.startEndDateList.size
@@ -125,6 +131,12 @@ class CalendarUtil {
                 return weekInfoDto
             }
 
+        }
+        
+        fun movePreOneMonth(weekInfoDto: WeekInfoDto) : WeekInfoDto {
+            val nextWeekInfoDto = setDayWeek(weekInfoDto.startEndDateList[0].startDate.minusMonths(1))
+            nextWeekInfoDto.weekRow = nextWeekInfoDto.startEndDateList.size
+            return nextWeekInfoDto
         }
 
     }

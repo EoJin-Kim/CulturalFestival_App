@@ -1,32 +1,30 @@
 package com.ej.culturalfestival.fragment.dialog
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ej.culturalfestival.MainActivity
-import com.ej.culturalfestival.R
-import com.ej.culturalfestival.adapter.DialogMonthCalendarAdapter
 import com.ej.culturalfestival.adapter.DialogWeekCalendarAdapter
 import com.ej.culturalfestival.databinding.FragmentDialogWeekCalendarBinding
 import com.ej.culturalfestival.dto.StartEndDate
+import com.ej.culturalfestival.dto.WeekInfoDto
 import com.ej.culturalfestival.util.CalendarUtil
 import com.ej.culturalfestival.viewmodel.FestivalViewModel
-import java.time.LocalDate
 
 
 class DialogWeekCalendarFragment(private val weekOnClick : (StartEndDate,Int) -> Unit) : DialogFragment() {
 
     val act : MainActivity by lazy { activity as MainActivity }
     val festivalViewModel : FestivalViewModel by lazy { ViewModelProvider(act).get(FestivalViewModel::class.java) }
+    lateinit var weekInfoDto: WeekInfoDto
     lateinit var dialogWeekCalendarFragmentBinding : FragmentDialogWeekCalendarBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -38,10 +36,22 @@ class DialogWeekCalendarFragment(private val weekOnClick : (StartEndDate,Int) ->
     ): View? {
         // Inflate the layout for this fragment
         dialogWeekCalendarFragmentBinding = FragmentDialogWeekCalendarBinding.inflate(layoutInflater)
-        val weekInfoLive = festivalViewModel.weekFragmentDate
-        setRecycler(weekInfoLive.value!!.startEndDateList)
+        weekInfoDto = festivalViewModel.weekFragmentDate.value!!
+        setRecycler(weekInfoDto.startEndDateList)
+        setTitle(weekInfoDto)
 
-        dialogWeekCalendarFragmentBinding.dialogWeekDateText.text = CalendarUtil.setWeekTitleText(festivalViewModel.weekFragmentDate.value!!)
+        dialogWeekCalendarFragmentBinding.dialogWeekPreBtn.setOnClickListener {
+            weekInfoDto = CalendarUtil.movePreOneMonth(weekInfoDto)
+            setTitle(weekInfoDto)
+            setRecycler(weekInfoDto.startEndDateList)
+        }
+
+        dialogWeekCalendarFragmentBinding.dialogWeekNextBtn.setOnClickListener {
+            weekInfoDto = CalendarUtil.moveNextOneMonth(weekInfoDto)
+            setTitle(weekInfoDto)
+            setRecycler(weekInfoDto.startEndDateList)
+        }
+
 
         return dialogWeekCalendarFragmentBinding.root
     }
@@ -65,6 +75,11 @@ class DialogWeekCalendarFragment(private val weekOnClick : (StartEndDate,Int) ->
 
         recycler.layoutManager = manager
         recycler.adapter = adapter
+    }
+
+    private fun setTitle(weekInfoDto: WeekInfoDto){
+        val month = weekInfoDto.startEndDateList[0].startDate.month.value
+        dialogWeekCalendarFragmentBinding.dialogWeekDateText.text = "${month}월"
     }
 
     companion object {

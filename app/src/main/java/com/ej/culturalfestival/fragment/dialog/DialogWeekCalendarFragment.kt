@@ -80,6 +80,7 @@ class DialogWeekCalendarFragment(private val weekOnClick : (StartEndDate,Int) ->
     private fun setTitle(weekInfoDto: WeekInfoDto){
         val month = weekInfoDto.startEndDateList[0].startDate.month.value
         dialogWeekCalendarFragmentBinding.dialogWeekDateText.text = "${month}월"
+
     }
 
     companion object {

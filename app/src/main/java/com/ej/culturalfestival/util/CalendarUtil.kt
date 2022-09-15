@@ -92,13 +92,25 @@ class CalendarUtil {
             }
             val weekInfoDto = WeekInfoDto(idx,startEndDateList)
             return weekInfoDto
+        }
 
+        fun setDayWeek(startEndDate: StartEndDate) : WeekInfoDto{
+            val startDate = startEndDate.startDate
+            val endDate = startEndDate.endDate
+            val weekInfoDto = setDayWeek(startDate)
+            return weekInfoDto
 
         }
+
         fun setWeekTitleText(nowWeek : WeekInfoDto) : String{
             val formatter : DateTimeFormatter = DateTimeFormatter.ofPattern("MM")
             val monthStr = nowWeek.startEndDateList[nowWeek.weekRow-1].startDate.format(formatter)
             return "${monthStr}월 ${nowWeek.weekRow}주"
+        }
+        fun setWeekTitleText(position: Int, startEndDate: StartEndDate) : String{
+            val formatter : DateTimeFormatter = DateTimeFormatter.ofPattern("MM")
+            val monthStr = startEndDate.startDate.format(formatter)
+            return "${monthStr}월 ${position + 1}주"
         }
 
         fun moveNextOneWeek(weekInfoDto: WeekInfoDto) : WeekInfoDto {

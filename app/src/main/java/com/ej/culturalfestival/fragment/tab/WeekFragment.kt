@@ -120,6 +120,17 @@ class WeekFragment : Fragment() {
     private fun dialogWeekClick(startEndDate: StartEndDate, position : Int) {
         Log.d("click","click")
         Log.d("click","${startEndDate.startDate} ~ ${startEndDate.endDate}")
+        weekFragmentBinding.weekTitle.text = CalendarUtil.setWeekTitleText(position, startEndDate)
+        nowWeek = CalendarUtil.setDayWeek(startEndDate)
+        festivalViewModel.setWeekFragmentDate(nowWeek)
+
+        val result = festivalViewModel.getFestival(startEndDate.startDate,startEndDate.endDate)
+        result.observe(viewLifecycleOwner){
+            setWeekView(it)
+        }
+
+
+        return
     }
 
 

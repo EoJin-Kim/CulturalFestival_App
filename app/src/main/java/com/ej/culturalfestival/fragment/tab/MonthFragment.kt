@@ -79,6 +79,7 @@ class MonthFragment(
 
             val nowDate = festivalViewModel.monthFragmentDate.value
             val preDate = nowDate!!.minusMonths(1)
+            monthYearText.text = yearMonthFromDate(preDate)
 
             festivalViewModel.setMonthFragmentDate(preDate)
 
@@ -91,6 +92,7 @@ class MonthFragment(
         nextBtn.setOnClickListener {
             val nowDate = festivalViewModel.monthFragmentDate.value
             val nextDate = nowDate!!.plusMonths(1)
+            monthYearText.text = yearMonthFromDate(nextDate)
 
             festivalViewModel.setMonthFragmentDate(nextDate)
 

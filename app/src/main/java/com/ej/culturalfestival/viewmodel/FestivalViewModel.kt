@@ -3,13 +3,19 @@ package com.ej.culturalfestival.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.ej.culturalfestival.api.FestivalApi
 import com.ej.culturalfestival.api.FestivalFetchr
 import com.ej.culturalfestival.dto.response.FestivalDto
 import com.ej.culturalfestival.dto.WeekInfoDto
+import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import javax.inject.Inject
 
-class FestivalViewModel :ViewModel(){
+@HiltViewModel
+class FestivalViewModel @Inject constructor(
+    private val festivalApi: FestivalApi
+) :ViewModel(){
 
     private val festivalFetchr : FestivalFetchr by lazy { FestivalFetchr() }
 

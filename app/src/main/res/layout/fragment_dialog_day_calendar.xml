@@ -12,27 +12,26 @@
         android:layout_height="match_parent"
         android:orientation="horizontal">
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/dialog_day_pre_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="이전" />
+            android:background="@drawable/ic_baseline_arrow_back_ios_new_24" />
 
         <TextView
             android:id="@+id/dialog_day_date_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
             android:layout_weight="1"
+            android:gravity="center"
             android:text="0000년 00월"
             android:textAlignment="center" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/dialog_day_next_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="다음" />
+            android:background="@drawable/ic_baseline_arrow_forward_ios_24" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView

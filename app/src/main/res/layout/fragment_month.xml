@@ -12,27 +12,25 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/pre_month"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="이전" />
+            android:background="@drawable/ic_baseline_arrow_back_ios_new_24" />
 
         <TextView
             android:id="@+id/monthYearText"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
             android:text="00월 0000년" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/next_month"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="다음" />
+            android:background="@drawable/ic_baseline_arrow_forward_ios_24" />
 
     </LinearLayout>
 
@@ -108,5 +106,6 @@
         android:layout_weight="1"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:spanCount="7"
-        tools:listitem="@layout/card_calendar" />
+        tools:listitem="@layout/card_calendar"
+        tools:itemCount="30"/>
 </LinearLayout>

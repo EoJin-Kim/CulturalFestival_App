@@ -78,12 +78,12 @@ class DayFragment : Fragment() {
     }
 
     private fun dialogDayClick(date :LocalDate){
-        val result = festivalViewModel.getFestival(date,date)
-        result.observe(viewLifecycleOwner){
+        festivalViewModel.festivalSearchResult.observe(viewLifecycleOwner){
             nowDayText.text = monthDayFromDate(date)
             festivalViewModel.setDayFragmentDate(date)
             setRecycler(it)
         }
+        festivalViewModel.getFestival(date,date)
 
         Log.d("click","$date")
     }
@@ -150,11 +150,11 @@ class DayFragment : Fragment() {
 
 
     fun getFestival(date : LocalDate){
-        val result = festivalViewModel.getFestival(date,date)
-        result.observe(viewLifecycleOwner){
+        festivalViewModel.festivalSearchResult.observe(viewLifecycleOwner){
             binding.dayFestivalCount.text = "${it.size} 축제"
             setRecycler(it)
         }
+        festivalViewModel.getFestival(date,date)
     }
 
     fun openHomepage(url : String){

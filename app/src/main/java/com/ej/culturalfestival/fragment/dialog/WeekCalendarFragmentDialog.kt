@@ -23,37 +23,47 @@ class WeekCalendarFragmentDialog(private val weekOnClick : (StartEndDate, Int) -
     val act : MainActivity by lazy { activity as MainActivity }
     val festivalViewModel : FestivalViewModel by activityViewModels()
     lateinit var weekInfoDto: WeekInfoDto
-    lateinit var dialogWeekCalendarFragmentBinding : FragmentDialogWeekCalendarBinding
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
+    lateinit var binding : FragmentDialogWeekCalendarBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        dialogWeekCalendarFragmentBinding = FragmentDialogWeekCalendarBinding.inflate(layoutInflater)
+        binding = FragmentDialogWeekCalendarBinding.inflate(layoutInflater)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         weekInfoDto = festivalViewModel.weekFragmentDate.value!!
+
+        uiDraw()
+
+        binding.dialogWeekPreBtn.setOnClickListener {
+            monthPreButtonClick()
+        }
+
+        binding.dialogWeekNextBtn.setOnClickListener {
+            monthNextButtonClick()
+        }
+    }
+
+    private fun monthNextButtonClick() {
+        weekInfoDto = CalendarUtil.moveNextOneMonth(weekInfoDto)
+        setTitle(weekInfoDto)
+        setRecycler(weekInfoDto.startEndDateList)
+    }
+
+    private fun monthPreButtonClick() {
+        weekInfoDto = CalendarUtil.movePreOneMonth(weekInfoDto)
+        setTitle(weekInfoDto)
+        setRecycler(weekInfoDto.startEndDateList)
+    }
+
+    private fun uiDraw() {
         setRecycler(weekInfoDto.startEndDateList)
         setTitle(weekInfoDto)
-
-        dialogWeekCalendarFragmentBinding.dialogWeekPreBtn.setOnClickListener {
-            weekInfoDto = CalendarUtil.movePreOneMonth(weekInfoDto)
-            setTitle(weekInfoDto)
-            setRecycler(weekInfoDto.startEndDateList)
-        }
-
-        dialogWeekCalendarFragmentBinding.dialogWeekNextBtn.setOnClickListener {
-            weekInfoDto = CalendarUtil.moveNextOneMonth(weekInfoDto)
-            setTitle(weekInfoDto)
-            setRecycler(weekInfoDto.startEndDateList)
-        }
-
-
-        return dialogWeekCalendarFragmentBinding.root
     }
 
     override fun onResume() {
@@ -68,7 +78,7 @@ class WeekCalendarFragmentDialog(private val weekOnClick : (StartEndDate, Int) -
     private fun setRecycler(startEndDateList : MutableList<StartEndDate>){
         val adapter = DialogWeekCalendarAdapter(weekOnClick,this)
         adapter.submitList(startEndDateList)
-        val recycler = dialogWeekCalendarFragmentBinding.dialogWeekRecycler
+        val recycler = binding.dialogWeekRecycler
 
 
         val manager: RecyclerView.LayoutManager = LinearLayoutManager(requireContext())
@@ -79,12 +89,11 @@ class WeekCalendarFragmentDialog(private val weekOnClick : (StartEndDate, Int) -
 
     private fun setTitle(weekInfoDto: WeekInfoDto){
         val month = weekInfoDto.startEndDateList[0].startDate.month.value
-        dialogWeekCalendarFragmentBinding.dialogWeekDateText.text = "${month}월"
+        binding.dialogWeekDateText.text = "${month}월"
 
     }
 
     companion object {
-
         fun newInstance(dialogWeekFun : (StartEndDate,Int) -> Unit) : WeekCalendarFragmentDialog{
             return WeekCalendarFragmentDialog(dialogWeekFun)
         }

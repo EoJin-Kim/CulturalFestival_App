@@ -27,6 +27,25 @@ class MonthCalendarFragmentDialog(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        uiDraw()
+        binding.dialogMonthNextBtn.setOnClickListener{
+            monthNextButtonClick()
+        }
+
+        binding.dialogMonthPreBtn.setOnClickListener{
+            monthPreButtonClick()
+        }
+    }
+
+    private fun monthPreButtonClick() {
+        TODO("Not yet implemented")
+    }
+
+    private fun monthNextButtonClick() {
+        TODO("Not yet implemented")
+    }
+
+    private fun uiDraw() {
         setRecycler()
     }
 

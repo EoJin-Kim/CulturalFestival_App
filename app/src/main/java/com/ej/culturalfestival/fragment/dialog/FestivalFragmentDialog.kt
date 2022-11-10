@@ -20,9 +20,6 @@ class FestivalFragmentDialog(
     val act : MainActivity by lazy { activity as MainActivity }
     val festivalViewModel : FestivalViewModel by activityViewModels()
     lateinit var binding: RowDayFestivalItemBinding
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,21 +30,16 @@ class FestivalFragmentDialog(
         // dialog 모서리 둥글게
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog?.window?.requestFeature(Window.FEATURE_NO_TITLE)
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
         uiDraw()
-
     }
 
     override fun onResume() {
         super.onResume()
-
         // dialog 넓이 80% 설정
         val params = dialog?.window?.attributes
         params?.width = resources.displayMetrics.widthPixels * 8 /10

@@ -64,7 +64,7 @@ class FestivalViewModel @Inject constructor(
         val firstDate = formatter.format(firstLocalDate)
         val lastDate = formatter.format(lastLocalDate)
         viewModelScope.launch {
-            val result = festivalApi.getFestival(firstDate,lastDate)
+            _festivalSearchResult.value = festivalApi.getFestival(firstDate,lastDate).response!!
         }
     }
 

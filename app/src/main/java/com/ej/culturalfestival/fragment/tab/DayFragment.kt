@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ej.culturalfestival.MainActivity
@@ -15,7 +15,7 @@ import com.ej.culturalfestival.adapter.DayCalendarAdapter
 import com.ej.culturalfestival.databinding.FragmentDayBinding
 import com.ej.culturalfestival.dto.FestivalDetailDto
 import com.ej.culturalfestival.dto.response.FestivalDto
-import com.ej.culturalfestival.fragment.dialog.DialogDayCalendarFragment
+import com.ej.culturalfestival.fragment.dialog.DayCalendarFragmentDialog
 import com.ej.culturalfestival.util.CalendarUtil.Companion.monthDayFromDate
 import com.ej.culturalfestival.viewmodel.FestivalViewModel
 import java.time.LocalDate
@@ -24,70 +24,57 @@ import java.time.LocalDate
 class DayFragment : Fragment() {
 
     val act : MainActivity by lazy { activity as MainActivity }
-    val festivalViewModel : FestivalViewModel by lazy { ViewModelProvider(act).get(FestivalViewModel::class.java) }
-    lateinit var dialogDayCalendarFragment: DialogDayCalendarFragment
+    val festivalViewModel : FestivalViewModel by activityViewModels()
+    lateinit var dayCalendarFragmentDialog: DayCalendarFragmentDialog
     var nowLocalDate : LocalDate = LocalDate.now()
 
-    lateinit var dayFragmentBinding: FragmentDayBinding
-
+    lateinit var binding: FragmentDayBinding
     lateinit var nowDayText: TextView
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        dayFragmentBinding = FragmentDayBinding.inflate(inflater,container,false)
-        nowDayText = dayFragmentBinding.nowDayText
+        binding = FragmentDayBinding.inflate(inflater,container,false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        nowDayText = binding.nowDayText
         nowDayText.text = monthDayFromDate(LocalDate.now())
 
-//        val result = festivalViewModel.getFestival(CalendarUtil.selectedDate,CalendarUtil.selectedDate)
-//        result.observe(viewLifecycleOwner){
-//            setRecycler(it)
-//        }
-
-
         val dialogDayFun : (LocalDate) -> Unit = { date -> dialogDayClick(date)}
-        dialogDayCalendarFragment = DialogDayCalendarFragment.newInstance(
+        dayCalendarFragmentDialog = DayCalendarFragmentDialog.newInstance(
             dialogDayFun
         )
 
-        dayFragmentBinding.nowDayText.setOnClickListener {
+        binding.nowDayText.setOnClickListener {
             Log.d("click","click1")
-            dialogDayCalendarFragment.show(act.supportFragmentManager,"축제 정보")
+            dayCalendarFragmentDialog.show(act.supportFragmentManager,"축제 정보")
         }
 
-
-
         val dayFragmentDate = festivalViewModel.dayFragmentDate
-
-
-
-
         dayFragmentDate.observe(viewLifecycleOwner){
             nowLocalDate = it
             val dateStr = monthDayFromDate(it)
-            dayFragmentBinding.nowDayText.text = dateStr
+            binding.nowDayText.text = dateStr
             getFestival(it)
         }
         if(dayFragmentDate.value==null){
             festivalViewModel.setDayFragmentDate(LocalDate.now())
         }
 
-        dayFragmentBinding.preDay.setOnClickListener {
+        binding.preDay.setOnClickListener {
             movePreDay()
         }
 
-        dayFragmentBinding.nextDay.setOnClickListener {
+        binding.nextDay.setOnClickListener {
             moveNextDay()
         }
-
-
-        return dayFragmentBinding.root
     }
 
     private fun dialogDayClick(date :LocalDate){
@@ -106,7 +93,7 @@ class DayFragment : Fragment() {
         festivalViewModel.setDayFragmentDate(moveDay)
         val dateStr = monthDayFromDate(moveDay)
         nowLocalDate=moveDay
-        dayFragmentBinding.nowDayText.text = dateStr
+        binding.nowDayText.text = dateStr
 
         // 뷰모델에서 해당 날짜 축제 가지고 오로 submit
     }
@@ -116,7 +103,7 @@ class DayFragment : Fragment() {
         festivalViewModel.setDayFragmentDate(moveDay)
         val dateStr = monthDayFromDate(moveDay)
         nowLocalDate=moveDay
-        dayFragmentBinding.nowDayText.text = dateStr
+        binding.nowDayText.text = dateStr
 
         // 뷰모델에서 해당 날짜 축제 가지고 오로 submit
     }
@@ -153,7 +140,7 @@ class DayFragment : Fragment() {
 
 
         // 레이아웃 적용
-        val recycler = dayFragmentBinding.dayRecycler
+        val recycler = binding.dayRecycler
         recycler.layoutManager = manager
 
         //어뎁터 적용
@@ -165,7 +152,7 @@ class DayFragment : Fragment() {
     fun getFestival(date : LocalDate){
         val result = festivalViewModel.getFestival(date,date)
         result.observe(viewLifecycleOwner){
-            dayFragmentBinding.dayFestivalCount.text = "${it.size} 축제"
+            binding.dayFestivalCount.text = "${it.size} 축제"
             setRecycler(it)
         }
     }

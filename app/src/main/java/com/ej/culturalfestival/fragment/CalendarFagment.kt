@@ -91,6 +91,7 @@ class CalendarFagment : Fragment() {
 
 
     companion object{
+        val TAG = "CalendarFagment"
         fun newInstance() : CalendarFagment {
             return CalendarFagment()
         }

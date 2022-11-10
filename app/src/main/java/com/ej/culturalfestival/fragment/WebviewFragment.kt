@@ -24,11 +24,6 @@ class WebviewFragment : Fragment() {
     lateinit var webviewFragmentBinding : FragmentWebviewBinding
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -63,6 +58,7 @@ class WebviewFragment : Fragment() {
     }
 
     companion object {
+        val TAG = "WebviewFragment"
         fun newInstance() : WebviewFragment{
           return WebviewFragment()
         }

@@ -7,12 +7,11 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ej.culturalfestival.MainActivity
 import com.ej.culturalfestival.adapter.DialogDayCalendarAdapter
-import com.ej.culturalfestival.adapter.DialogMonthCalendarAdapter
 import com.ej.culturalfestival.databinding.FragmentDialogDayCalendarBinding
 import com.ej.culturalfestival.util.CalendarUtil.Companion.dateListTodateDtoList
 import com.ej.culturalfestival.util.CalendarUtil.Companion.yearMonthFromDate
@@ -21,56 +20,56 @@ import java.time.LocalDate
 import java.time.YearMonth
 
 
-class DialogDayCalendarFragment(
+class DayCalendarFragmentDialog(
     private val dayOnClick : (LocalDate) -> Unit,
 ) : DialogFragment() {
 
     val act : MainActivity by lazy { activity as MainActivity }
-    val festivalViewModel : FestivalViewModel by lazy { ViewModelProvider(act).get(FestivalViewModel::class.java) }
+    val festivalViewModel : FestivalViewModel by activityViewModels()
 
-    lateinit var dialogDayCalendarFragmentBinding : FragmentDialogDayCalendarBinding
+    lateinit var binding : FragmentDialogDayCalendarBinding
 
-    lateinit var dialogDateText : TextView
     lateinit var dialogDayDate : LocalDate
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        dialogDayCalendarFragmentBinding = FragmentDialogDayCalendarBinding.inflate(layoutInflater)
+        binding = FragmentDialogDayCalendarBinding.inflate(layoutInflater)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         dialogDayDate = festivalViewModel.dayFragmentDate.value!!
-
-
-        dialogDateText = dialogDayCalendarFragmentBinding.dialogDayDateText
-
-        dialogDateText.text = yearMonthFromDate(dialogDayDate)
-
-        dialogDayCalendarFragmentBinding.dialogDayPreBtn.setOnClickListener {
-
-            dialogDayDate = dialogDayDate.minusMonths(1)
-//            festivalViewModel.setDayFragmentDate(preDate)
-            dialogDateText.text = yearMonthFromDate(dialogDayDate)
-            setRecycler(dialogDayDate)
+        uiDraw()
+        binding.dialogDayPreBtn.setOnClickListener {
+            dayPreButtonClick()
         }
 
-        dialogDayCalendarFragmentBinding.dialogDayNextBtn.setOnClickListener {
-            dialogDayDate = dialogDayDate.plusMonths(1)
-//            festivalViewModel.setDayFragmentDate(nextDate)
-            dialogDateText.text = yearMonthFromDate(dialogDayDate)
-            setRecycler(dialogDayDate)
+        binding.dialogDayNextBtn.setOnClickListener {
+            dayNextButtonClick()
         }
 
+    }
 
-
-
+    private fun uiDraw() {
+        binding.dialogDayDateText.text = yearMonthFromDate(dialogDayDate)
         setRecycler(festivalViewModel.dayFragmentDate.value!!)
+    }
 
-        return dialogDayCalendarFragmentBinding.root
+    private fun dayNextButtonClick() {
+        dialogDayDate = dialogDayDate.plusMonths(1)
+        binding.dialogDayDateText.text = yearMonthFromDate(dialogDayDate)
+        setRecycler(dialogDayDate)
+    }
+
+    private fun dayPreButtonClick() {
+        dialogDayDate = dialogDayDate.minusMonths(1)
+        binding.dialogDayDateText.text = yearMonthFromDate(dialogDayDate)
+        setRecycler(dialogDayDate)
     }
 
     private fun setRecycler(date : LocalDate) {
@@ -84,7 +83,7 @@ class DialogDayCalendarFragment(
         // 레이아웃 설정 (열 7개)
         val manager: RecyclerView.LayoutManager = GridLayoutManager(requireContext(), 7)
 
-        val recyclerView = dialogDayCalendarFragmentBinding.dialogMonthRecycler
+        val recyclerView = binding.dialogMonthRecycler
         // 레이아웃 적용
         recyclerView.layoutManager = manager
 
@@ -122,23 +121,17 @@ class DialogDayCalendarFragment(
         for (i in 1 until (calendarSize+1)) {
             if (i <= dayOfWeek ) {
                 dayList.add(null)
-
-
             }
             else if( i > lastDay + dayOfWeek){
                 dayList.add(null)
-
             }
             else{
-
                 val nowDate = LocalDate.of(
                     date.year,
                     date.month,i-dayOfWeek)
                 dayList.add(nowDate)
-
             }
         }
-
         return dayList
     }
 
@@ -152,9 +145,8 @@ class DialogDayCalendarFragment(
     }
 
     companion object {
-
-        fun newInstance(dayOnclick : (LocalDate) -> Unit) : DialogDayCalendarFragment{
-            return DialogDayCalendarFragment(
+        fun newInstance(dayOnclick : (LocalDate) -> Unit) : DayCalendarFragmentDialog{
+            return DayCalendarFragmentDialog(
                 dayOnclick
             )
         }

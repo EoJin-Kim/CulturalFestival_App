@@ -1,38 +1,33 @@
 package com.ej.culturalfestival.fragment.dialog
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.ej.culturalfestival.R
 import com.ej.culturalfestival.adapter.DialogMonthCalendarAdapter
 import com.ej.culturalfestival.databinding.FragmentDialogMonthCalendarBinding
-import java.time.LocalDate
 
 
-class DialogMonthCalendarFragment(
+class MonthCalendarFragmentDialog(
 ) : DialogFragment() {
     lateinit var dialogMonthClick : (Int) -> Unit
-    lateinit var dialogMonthCalendarFragmentBinding : FragmentDialogMonthCalendarBinding
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
+    lateinit var binding : FragmentDialogMonthCalendarBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        dialogMonthCalendarFragmentBinding = FragmentDialogMonthCalendarBinding.inflate(inflater)
+        binding = FragmentDialogMonthCalendarBinding.inflate(inflater)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         setRecycler()
-        return dialogMonthCalendarFragmentBinding.root
     }
 
 
@@ -54,17 +49,18 @@ class DialogMonthCalendarFragment(
         }
         adapter.submitList(arrayList)
 
-
-        val recycler = dialogMonthCalendarFragmentBinding.dialogMonthRecycler
         val manager = GridLayoutManager(requireContext(), 3)
-        recycler.adapter = adapter
-        recycler.layoutManager = manager
+        val recycler = binding.dialogMonthRecycler
+        recycler.apply {
+            this.adapter = adapter
+            layoutManager = manager
+        }
     }
 
     companion object {
 
         fun newInstance(dialogMonthFun : (Int) -> Unit) =
-            DialogMonthCalendarFragment().apply {
+            MonthCalendarFragmentDialog().apply {
                 dialogMonthClick = dialogMonthFun
             }
     }

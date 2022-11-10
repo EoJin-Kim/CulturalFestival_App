@@ -89,6 +89,7 @@ class SearchFragment : Fragment() {
     }
 
     companion object{
+        val TAG = "SearchFragment"
         fun newInstance() : SearchFragment {
             return SearchFragment()
         }

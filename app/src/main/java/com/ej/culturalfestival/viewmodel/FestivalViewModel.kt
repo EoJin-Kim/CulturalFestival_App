@@ -3,11 +3,13 @@ package com.ej.culturalfestival.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.ej.culturalfestival.api.FestivalApi
 import com.ej.culturalfestival.api.FestivalFetchr
 import com.ej.culturalfestival.dto.response.FestivalDto
 import com.ej.culturalfestival.dto.WeekInfoDto
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
@@ -17,14 +19,17 @@ class FestivalViewModel @Inject constructor(
     private val festivalApi: FestivalApi
 ) :ViewModel(){
 
-    private val festivalFetchr : FestivalFetchr by lazy { FestivalFetchr() }
-
     private val formatter : DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+
+
+    private var _festivalOne = MutableLiveData<FestivalDto>()
+    val festivalOne : LiveData<FestivalDto>
+        get() = _festivalOne
+
     private var _festivalSearchResult = MutableLiveData<MutableList<FestivalDto>>()
     val festivalSearchResult : LiveData<MutableList<FestivalDto>>
         get() = _festivalSearchResult
 
-    var openUrl : String = ""
 
     private val _dayFragmentDate = MutableLiveData<LocalDate>()
     val dayFragmentDate : LiveData<LocalDate>
@@ -39,6 +44,7 @@ class FestivalViewModel @Inject constructor(
     val monthFragmentDate : LiveData<LocalDate>
         get() = _monthFragmentDate
 
+    var openUrl : String = ""
 
     fun setDayFragmentDate(date: LocalDate){
         _dayFragmentDate.value = date
@@ -54,22 +60,24 @@ class FestivalViewModel @Inject constructor(
     }
 
 
-    fun getFestival(firstLocalDate : LocalDate, lastLocalDate : LocalDate) : LiveData<MutableList<FestivalDto>>{
+    fun getFestival(firstLocalDate : LocalDate, lastLocalDate : LocalDate) {
         val firstDate = formatter.format(firstLocalDate)
         val lastDate = formatter.format(lastLocalDate)
-        val result = festivalFetchr.getFestival(firstDate,lastDate)
-        return result
+        viewModelScope.launch {
+            val result = festivalApi.getFestival(firstDate,lastDate)
+        }
     }
 
-    fun getFestival(id : Long) : LiveData<FestivalDto>{
-
-        val result = festivalFetchr.getFestival(id)
-        return result
+    fun getFestival(id : Long){
+        viewModelScope.launch {
+            _festivalOne.value = festivalApi.getFestival(id).response!!
+        }
     }
 
-    fun getFestivalByTitle(str : String):LiveData<MutableList<FestivalDto>>{
-        _festivalSearchResult = festivalFetchr.getFestivalByTitle(str)
-        return festivalSearchResult
+    fun getFestivalByTitle(str : String){
+        viewModelScope.launch {
+            _festivalSearchResult.value = festivalApi.getFestivalByTitle(str).response!!
+        }
     }
 
 }

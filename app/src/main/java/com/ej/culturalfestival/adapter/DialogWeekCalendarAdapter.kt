@@ -9,19 +9,18 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.ej.culturalfestival.R
 import com.ej.culturalfestival.dto.StartEndDate
-import com.ej.culturalfestival.fragment.dialog.DialogDayCalendarFragment
-import com.ej.culturalfestival.fragment.dialog.DialogWeekCalendarFragment
+import com.ej.culturalfestival.fragment.dialog.WeekCalendarFragmentDialog
 
 class DialogWeekCalendarAdapter(
     private val onClick : (StartEndDate,Int) -> Unit,
-    private val dialogWeekCalendarFragment : DialogWeekCalendarFragment
+    private val weekCalendarFragmentDialog : WeekCalendarFragmentDialog
 ) : ListAdapter<StartEndDate, DialogWeekCalendarAdapter.WeekCalendarViewHolder>(DialogWeekCalendarDiffCallback) {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeekCalendarViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.card_week_calendar,parent,false)
-        val holder = DialogWeekCalendarAdapter.WeekCalendarViewHolder(view,dialogWeekCalendarFragment,onClick)
+        val holder = DialogWeekCalendarAdapter.WeekCalendarViewHolder(view,weekCalendarFragmentDialog,onClick)
         return holder
     }
 
@@ -32,7 +31,7 @@ class DialogWeekCalendarAdapter(
 
     class WeekCalendarViewHolder (
         itemView : View,
-        private val dialogWeekCalendarFragment : DialogWeekCalendarFragment,
+        private val weekCalendarFragmentDialog : WeekCalendarFragmentDialog,
         private val onClick : (StartEndDate,Int) -> Unit,
     ): RecyclerView.ViewHolder(itemView){
 
@@ -44,7 +43,7 @@ class DialogWeekCalendarAdapter(
 
             weekPositon.setOnClickListener {
                 onClick(startEndDate,position)
-                dialogWeekCalendarFragment.dismiss()
+                weekCalendarFragmentDialog.dismiss()
             }
         }
     }

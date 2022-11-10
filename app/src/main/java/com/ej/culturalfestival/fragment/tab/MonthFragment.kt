@@ -8,47 +8,36 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ej.culturalfestival.MainActivity
 import com.ej.culturalfestival.adapter.MonthCalendarAdapter
-import com.ej.culturalfestival.databinding.FragmentDialogMonthCalendarBinding
 import com.ej.culturalfestival.databinding.FragmentMonthBinding
 import com.ej.culturalfestival.dto.FestivalDayInfoDto
-import com.ej.culturalfestival.dto.StartEndDate
 import com.ej.culturalfestival.dto.response.FestivalDto
-import com.ej.culturalfestival.fragment.dialog.DialogMonthCalendarFragment
-import com.ej.culturalfestival.fragment.dialog.DialogWeekCalendarFragment
-import com.ej.culturalfestival.util.CalendarUtil
+import com.ej.culturalfestival.fragment.dialog.MonthCalendarFragmentDialog
 import com.ej.culturalfestival.util.CalendarUtil.Companion.formatter
 import com.ej.culturalfestival.util.CalendarUtil.Companion.yearMonthFromDate
 import com.ej.culturalfestival.viewmodel.FestivalViewModel
 import java.time.LocalDate
 import java.time.YearMonth
-import java.time.format.DateTimeFormatter
 
 
 class MonthFragment(
     private val onClick : (LocalDate) -> Unit
 ) : Fragment() {
 
-
-
     val act : MainActivity by lazy { activity as MainActivity }
-    val festivalViewModel : FestivalViewModel by lazy { ViewModelProvider(act).get(FestivalViewModel::class.java) }
+    val festivalViewModel : FestivalViewModel by activityViewModels()
 
     lateinit var monthYearText: TextView
     lateinit var recycelrView : RecyclerView
 
+    lateinit var binding : FragmentMonthBinding
+    lateinit var monthCalendarFragmentDialog : MonthCalendarFragmentDialog
 
-    lateinit var monthFragmentBinding : FragmentMonthBinding
-    lateinit var dialogMonthCalendarFragment : DialogMonthCalendarFragment
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -56,24 +45,27 @@ class MonthFragment(
     ): View? {
         // Inflate the layout for this fragment
 //        monthFragmentBinding = FragmentMonthBinding.inflate(inflater,container,false)
-        monthFragmentBinding = FragmentMonthBinding.inflate(inflater,container,false)
+        binding = FragmentMonthBinding.inflate(inflater,container,false)
+        return binding.root
+    }
 
-
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         // 초기화
-        monthYearText = monthFragmentBinding.monthYearText
-        recycelrView = monthFragmentBinding.monthRecycler
-        val preBtn : Button = monthFragmentBinding.preMonth
-        val nextBtn : Button = monthFragmentBinding.nextMonth
+        monthYearText = binding.monthYearText
+        recycelrView = binding.monthRecycler
+        val preBtn : Button = binding.preMonth
+        val nextBtn : Button = binding.nextMonth
 
         festivalViewModel.setMonthFragmentDate(LocalDate.now())
         monthYearText.text = yearMonthFromDate(LocalDate.now())
 
         val dialogMonthFun : (Int) -> Unit = { month -> dialogMonthClick(month)}
-        dialogMonthCalendarFragment = DialogMonthCalendarFragment.newInstance(
+        monthCalendarFragmentDialog = MonthCalendarFragmentDialog.newInstance(
             dialogMonthFun
         )
         monthYearText.setOnClickListener {
-            dialogMonthCalendarFragment.show(act.supportFragmentManager, "월 dialog")
+            monthCalendarFragmentDialog.show(act.supportFragmentManager, "월 dialog")
         }
         preBtn.setOnClickListener {
 
@@ -88,6 +80,7 @@ class MonthFragment(
                 setMonthView(it)
             }
         }
+
 
         nextBtn.setOnClickListener {
             val nowDate = festivalViewModel.monthFragmentDate.value
@@ -109,12 +102,8 @@ class MonthFragment(
             setMonthView(it)
         }
 
-
-        // 화면 설정
-
-
-        return monthFragmentBinding.root
     }
+
     private fun dialogMonthClick(month: Int) {
         Log.d("click","click")
     }
@@ -177,26 +166,15 @@ class MonthFragment(
         if (dayOfWeek == 7) {
             dayOfWeek =0
         }
-        // 날짜 생성
-//        var preDayCount = dayOfWeek
-//        var nextDayCount = 1
 
         var festivalIdx = 0
         var nowDay = 1
         for (i in 1 until (calendarSize+1)) {
             if (i <= dayOfWeek ) {
                 dayList.add(null)
-//                val preMonthDay  = CalendarUtil.selectedDate.minusMonths(1);
-//                val preLocalDate = YearMonth.from(preMonthDay)
-//                val preMonthLastDay = preLocalDate.lengthOfMonth()
-//                dayList.add(LocalDate.of(preLocalDate.year,preLocalDate.month,preMonthLastDay-preDayCount-- +1))
-
             }
             else if( i > lastDay + dayOfWeek){
                 dayList.add(null)
-//                val nextMonth  = CalendarUtil.selectedDate.plusMonths(1);
-//                val nextLocalDate = YearMonth.from(nextMonth)
-//                dayList.add(LocalDate.of(nextLocalDate.year,nextLocalDate.month,nextDayCount++))
             }
             else{
                 var count = 0
@@ -225,10 +203,7 @@ class MonthFragment(
     private fun calendarDayClick(date : LocalDate){
         Log.d("click","$date")
         onClick(date)
-
-
     }
-
 
 
     companion object{

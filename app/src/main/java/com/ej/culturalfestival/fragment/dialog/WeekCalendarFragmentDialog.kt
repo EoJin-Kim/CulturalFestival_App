@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ej.culturalfestival.MainActivity
@@ -18,10 +18,10 @@ import com.ej.culturalfestival.util.CalendarUtil
 import com.ej.culturalfestival.viewmodel.FestivalViewModel
 
 
-class DialogWeekCalendarFragment(private val weekOnClick : (StartEndDate,Int) -> Unit) : DialogFragment() {
+class WeekCalendarFragmentDialog(private val weekOnClick : (StartEndDate, Int) -> Unit) : DialogFragment() {
 
     val act : MainActivity by lazy { activity as MainActivity }
-    val festivalViewModel : FestivalViewModel by lazy { ViewModelProvider(act).get(FestivalViewModel::class.java) }
+    val festivalViewModel : FestivalViewModel by activityViewModels()
     lateinit var weekInfoDto: WeekInfoDto
     lateinit var dialogWeekCalendarFragmentBinding : FragmentDialogWeekCalendarBinding
 
@@ -85,8 +85,8 @@ class DialogWeekCalendarFragment(private val weekOnClick : (StartEndDate,Int) ->
 
     companion object {
 
-        fun newInstance(dialogWeekFun : (StartEndDate,Int) -> Unit) : DialogWeekCalendarFragment{
-            return DialogWeekCalendarFragment(dialogWeekFun)
+        fun newInstance(dialogWeekFun : (StartEndDate,Int) -> Unit) : WeekCalendarFragmentDialog{
+            return WeekCalendarFragmentDialog(dialogWeekFun)
         }
 
     }

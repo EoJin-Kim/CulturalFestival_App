@@ -20,7 +20,7 @@ import com.ej.culturalfestival.dto.FestivalWeekInfoDto
 import com.ej.culturalfestival.dto.StartEndDate
 import com.ej.culturalfestival.dto.response.FestivalDto
 import com.ej.culturalfestival.dto.WeekInfoDto
-import com.ej.culturalfestival.fragment.dialog.DialogWeekCalendarFragment
+import com.ej.culturalfestival.fragment.dialog.WeekCalendarFragmentDialog
 import com.ej.culturalfestival.fragment.dialog.FestivalFragmentDialog
 import com.ej.culturalfestival.util.CalendarUtil
 import com.ej.culturalfestival.util.CalendarUtil.Companion.formatter
@@ -38,8 +38,8 @@ class WeekFragment : Fragment() {
     val act : MainActivity by lazy { activity as MainActivity }
     val festivalViewModel : FestivalViewModel by lazy { ViewModelProvider(act).get(FestivalViewModel::class.java) }
 
-    lateinit var weekFragmentBinding : FragmentWeekBinding
-    lateinit var dialogWeekCalendarFragment : DialogWeekCalendarFragment
+    lateinit var binding : FragmentWeekBinding
+    lateinit var weekCalendarFragmentDialog : WeekCalendarFragmentDialog
     lateinit var nowWeek : WeekInfoDto;
 
 
@@ -56,24 +56,23 @@ class WeekFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        weekFragmentBinding = FragmentWeekBinding.inflate(inflater,container,false)
+        binding = FragmentWeekBinding.inflate(inflater,container,false)
 
-        val preBtn : Button = weekFragmentBinding.preWeek
-        val nextBtn : Button = weekFragmentBinding.nextWeek
-        val weekText : TextView = weekFragmentBinding.weekTitle
+        val preBtn : Button = binding.preWeek
+        val nextBtn : Button = binding.nextWeek
+        val weekText : TextView = binding.weekTitle
 
         nowWeek = CalendarUtil.setDayWeek(LocalDate.now())
         festivalViewModel.setWeekFragmentDate(nowWeek)
 
         val dialogWeekFun : (StartEndDate,Int) -> Unit = { startEndDate ,position-> dialogWeekClick(startEndDate,position)}
-        dialogWeekCalendarFragment = DialogWeekCalendarFragment.newInstance(
+        weekCalendarFragmentDialog = WeekCalendarFragmentDialog.newInstance(
             dialogWeekFun
         )
         weekText.setOnClickListener {
-            dialogWeekCalendarFragment.show(act.supportFragmentManager,"달력")
+            weekCalendarFragmentDialog.show(act.supportFragmentManager,"달력")
         }
-
-        recycler = weekFragmentBinding.weekRecycler
+        recycler = binding.weekRecycler
         preBtn.setOnClickListener {
             nowWeek = movePreOneWeek(nowWeek)
             festivalViewModel.setWeekFragmentDate(nowWeek)
@@ -83,7 +82,6 @@ class WeekFragment : Fragment() {
                 nowWeek.startEndDateList[nowWeek.weekRow-1].startDate,
                 nowWeek.startEndDateList[nowWeek.weekRow-1].endDate
             )
-
             result.observe(viewLifecycleOwner){
                 setWeekView(it)
             }
@@ -102,9 +100,6 @@ class WeekFragment : Fragment() {
                 setWeekView(it)
             }
         }
-
-
-
         weekText.text = setWeekTitleText(nowWeek)
 
         val result = festivalViewModel.getFestival(
@@ -115,12 +110,12 @@ class WeekFragment : Fragment() {
         }
 
 
-        return weekFragmentBinding.root
+        return binding.root
     }
     private fun dialogWeekClick(startEndDate: StartEndDate, position : Int) {
         Log.d("click","click")
         Log.d("click","${startEndDate.startDate} ~ ${startEndDate.endDate}")
-        weekFragmentBinding.weekTitle.text = CalendarUtil.setWeekTitleText(position, startEndDate)
+        binding.weekTitle.text = CalendarUtil.setWeekTitleText(position, startEndDate)
         nowWeek = CalendarUtil.setDayWeek(startEndDate)
         festivalViewModel.setWeekFragmentDate(nowWeek)
 
@@ -128,13 +123,7 @@ class WeekFragment : Fragment() {
         result.observe(viewLifecycleOwner){
             setWeekView(it)
         }
-
-
-        return
     }
-
-
-
 
 
 
@@ -188,8 +177,6 @@ class WeekFragment : Fragment() {
     }
 
     private fun setWeekView(festivalList : MutableList<FestivalDto>){
-
-
         val dayList = daysInWeekArray(nowWeek,festivalList)
 
         val funFestivalClickVal : (Long) -> Unit = {id -> festivalClickEvent(id)}
@@ -197,7 +184,7 @@ class WeekFragment : Fragment() {
         adapter.submitList(dayList)
 
         val manager : RecyclerView.LayoutManager = LinearLayoutManager(requireContext())
-        val weekRecycler = weekFragmentBinding.weekRecycler
+        val weekRecycler = binding.weekRecycler
 
         weekRecycler.adapter = adapter
         weekRecycler.layoutManager = manager
@@ -206,7 +193,6 @@ class WeekFragment : Fragment() {
 
     private fun calcMonthWeek(month : Int) : MutableList<WeekInfoDto>{
         val weekList : MutableList<WeekInfoDto> = mutableListOf()
-
         return weekList
     }
 
@@ -217,7 +203,7 @@ class WeekFragment : Fragment() {
         result.observe(viewLifecycleOwner){
             val festivalDetailDto = FestivalDetailDto(it)
             val funUrlOpen : (String) -> Unit =  { url -> urlOpen(url) }
-            val dialog = FestivalFragmentDialog(festivalDetailDto,funUrlOpen)
+            val dialog = FestivalFragmentDialog.newInstance(festivalDetailDto,funUrlOpen)
             dialog.show(act.supportFragmentManager,"축제 정보")
         }
 

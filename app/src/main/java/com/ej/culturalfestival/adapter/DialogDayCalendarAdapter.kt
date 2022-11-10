@@ -10,17 +10,17 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.ej.culturalfestival.R
 import com.ej.culturalfestival.dto.LocalDateDto
-import com.ej.culturalfestival.fragment.dialog.DialogDayCalendarFragment
+import com.ej.culturalfestival.fragment.dialog.DayCalendarFragmentDialog
 import java.time.LocalDate
 
 class DialogDayCalendarAdapter(
     private val onClick : (LocalDate) -> Unit,
-    private val dialogDayCalendarFragment : DialogDayCalendarFragment
+    private val dayCalendarFragmentDialog : DayCalendarFragmentDialog
 ) : ListAdapter<LocalDateDto, DialogDayCalendarAdapter.DayCalendarViewHolder>(DialogDayCalendarDiffCallback) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: kotlin.Int): DayCalendarViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.card_calendar,parent,false)
-        val holder = DialogDayCalendarAdapter.DayCalendarViewHolder(view,dialogDayCalendarFragment, onClick)
+        val holder = DialogDayCalendarAdapter.DayCalendarViewHolder(view,dayCalendarFragmentDialog, onClick)
         return holder
     }
 
@@ -29,7 +29,7 @@ class DialogDayCalendarAdapter(
         holder.bind(date,position)
     }
 
-    class DayCalendarViewHolder(itemView : View, private val dialogDayCalendarFragment : DialogDayCalendarFragment, private val onClick : (LocalDate) -> Unit,): RecyclerView.ViewHolder(itemView){
+    class DayCalendarViewHolder(itemView : View, private val dayCalendarFragmentDialog : DayCalendarFragmentDialog, private val onClick : (LocalDate) -> Unit,): RecyclerView.ViewHolder(itemView){
 
         private val parentView : View  = itemView.findViewById(R.id.parent_view)
         private val dayText  : TextView = itemView.findViewById(R.id.day_text)
@@ -51,7 +51,7 @@ class DialogDayCalendarAdapter(
 
                 parentView.setOnClickListener {
                     onClick(dateDto.date)
-                    dialogDayCalendarFragment.dismiss()
+                    dayCalendarFragmentDialog.dismiss()
                 }
 
             }

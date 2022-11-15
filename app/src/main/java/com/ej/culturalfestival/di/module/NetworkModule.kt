@@ -2,6 +2,8 @@ package com.ej.culturalfestival.di.module
 
 import com.ej.culturalfestival.api.FestivalApi
 import com.ej.culturalfestival.util.ServerInfo
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,9 +25,12 @@ object NetworkModule {
     @Singleton
     @Provides
     fun provideFestivalApi() : FestivalApi{
+        val moshi = Moshi.Builder()
+            .add(KotlinJsonAdapterFactory())
+            .build()
         val retrofit = Retrofit.Builder()
             .baseUrl(ServerInfo.SERVER_URL)
-            .addConverterFactory(MoshiConverterFactory.create())
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
 
         val festaivalApi = retrofit.create(FestivalApi::class.java)

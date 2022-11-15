@@ -34,12 +34,9 @@ class DialogDayCalendarAdapter(
         private val parentView : View  = itemView.findViewById(R.id.parent_view)
         private val dayText  : TextView = itemView.findViewById(R.id.day_text)
         private val dayCountText  : TextView = itemView.findViewById(R.id.day_count)
-
         private val noDateColorCode = "#B5F3C7"
 
-        fun bind(dateDto : LocalDateDto, position : kotlin.Int){
-
-
+        fun bind(dateDto : LocalDateDto, position : Int){
 
             dayCountText.visibility = View.GONE
             if (dateDto.date == null) {
@@ -53,7 +50,6 @@ class DialogDayCalendarAdapter(
                     onClick(dateDto.date)
                     dayCalendarFragmentDialog.dismiss()
                 }
-
             }
 
             // 토요일

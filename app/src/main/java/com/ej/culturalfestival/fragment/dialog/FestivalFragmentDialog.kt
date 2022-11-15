@@ -35,7 +35,7 @@ class FestivalFragmentDialog(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        uiDraw()
+        drawUi()
     }
 
     override fun onResume() {
@@ -47,7 +47,7 @@ class FestivalFragmentDialog(
         dialog?.window?.attributes = params as WindowManager.LayoutParams
     }
 
-    private fun uiDraw() {
+    private fun drawUi() {
         binding.dayFestivalTitle.text = festivalDetailDto.title
         binding.dayFestivalContent.text = festivalDetailDto.content
         binding.dayFestivalPhone.text = festivalDetailDto.phone

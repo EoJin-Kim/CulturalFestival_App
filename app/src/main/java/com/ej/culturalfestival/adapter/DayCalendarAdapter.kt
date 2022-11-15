@@ -25,7 +25,6 @@ class DayCalendarAdapter(
             .inflate(R.layout.row_day_festival_item,parent,false)
         val holder = DayCalendarAdapter.DayCalendarViewHolder(view,onClick)
         return holder
-
     }
 
     override fun onBindViewHolder(holder: DayCalendarAdapter.DayCalendarViewHolder, position: Int) {
@@ -106,8 +105,6 @@ class DayCalendarAdapter(
             else{
                 homePageButton.visibility = View.GONE
             }
-
-
         }
     }
 }

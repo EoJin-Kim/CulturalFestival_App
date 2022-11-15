@@ -38,7 +38,7 @@ class WeekCalendarFragmentDialog(private val weekOnClick : (StartEndDate, Int) -
         super.onViewCreated(view, savedInstanceState)
         weekInfoDto = festivalViewModel.weekFragmentDate.value!!
 
-        uiDraw()
+        drawUi()
 
         binding.dialogWeekPreBtn.setOnClickListener {
             monthPreButtonClick()
@@ -61,7 +61,7 @@ class WeekCalendarFragmentDialog(private val weekOnClick : (StartEndDate, Int) -
         setRecycler(weekInfoDto.startEndDateList)
     }
 
-    private fun uiDraw() {
+    private fun drawUi() {
         setRecycler(weekInfoDto.startEndDateList)
         setTitle(weekInfoDto)
     }

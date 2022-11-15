@@ -61,7 +61,7 @@
                 android:textSize="8sp" />
 
             <Button
-                android:id="@+id/button"
+                android:id="@+id/week_item_open_close"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:background="@drawable/ic_baseline_arrow_drop_up_24" />

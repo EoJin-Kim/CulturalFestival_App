@@ -32,8 +32,6 @@ class MonthFragment(
     val act : MainActivity by lazy { activity as MainActivity }
     val festivalViewModel : FestivalViewModel by activityViewModels()
 
-    lateinit var monthYearText: TextView
-    lateinit var recycelrView : RecyclerView
 
     lateinit var binding : FragmentMonthBinding
     lateinit var monthCalendarFragmentDialog : MonthCalendarFragmentDialog
@@ -52,68 +50,60 @@ class MonthFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // 초기화
-        monthYearText = binding.monthYearText
-        recycelrView = binding.monthRecycler
-        val preBtn : Button = binding.preMonth
-        val nextBtn : Button = binding.nextMonth
 
         festivalViewModel.setMonthFragmentDate(LocalDate.now())
-        monthYearText.text = yearMonthFromDate(LocalDate.now())
+        drawUi()
 
         val dialogMonthFun : (Int) -> Unit = { month -> dialogMonthClick(month)}
-        monthCalendarFragmentDialog = MonthCalendarFragmentDialog.newInstance(
-            dialogMonthFun
-        )
-        monthYearText.setOnClickListener {
+        monthCalendarFragmentDialog = MonthCalendarFragmentDialog.newInstance(dialogMonthFun)
+        binding.monthYearText.setOnClickListener {
             monthCalendarFragmentDialog.show(act.supportFragmentManager, "월 dialog")
         }
-        preBtn.setOnClickListener {
 
-            val nowDate = festivalViewModel.monthFragmentDate.value
-            val preDate = nowDate!!.minusMonths(1)
-            monthYearText.text = yearMonthFromDate(preDate)
-
-            festivalViewModel.setMonthFragmentDate(preDate)
-
-            val festivalList =getFestivalList(preDate)
-            festivalList.observe(viewLifecycleOwner){
-                setMonthView(it)
-            }
+        binding.preMonth.setOnClickListener {
+            clickPreBtn()
         }
 
-
-        nextBtn.setOnClickListener {
-            val nowDate = festivalViewModel.monthFragmentDate.value
-            val nextDate = nowDate!!.plusMonths(1)
-            monthYearText.text = yearMonthFromDate(nextDate)
-
-            festivalViewModel.setMonthFragmentDate(nextDate)
-
-            val festivalList =getFestivalList(nextDate)
-            festivalList.observe(viewLifecycleOwner){
-                setMonthView(it)
-            }
+        binding.nextMonth.setOnClickListener {
+            clickNextBtn()
         }
-        // 현재 날짜
 
-
-        val festivalList = getFestivalList(festivalViewModel.monthFragmentDate.value!!)
-        festivalList.observe(viewLifecycleOwner){
+        festivalViewModel.festivalSearchResult.observe(viewLifecycleOwner){
             setMonthView(it)
         }
 
+    }
+
+    private fun clickNextBtn() {
+        val nowDate = festivalViewModel.monthFragmentDate.value
+        val nextDate = nowDate!!.plusMonths(1)
+        binding.monthYearText.text = yearMonthFromDate(nextDate)
+        festivalViewModel.setMonthFragmentDate(nextDate)
+        getFestivalList(nextDate)
+    }
+
+    private fun clickPreBtn() {
+        val nowDate = festivalViewModel.monthFragmentDate.value
+        val preDate = nowDate!!.minusMonths(1)
+        binding.monthYearText.text = yearMonthFromDate(preDate)
+        festivalViewModel.setMonthFragmentDate(preDate)
+        getFestivalList(preDate)
+    }
+
+    private fun drawUi() {
+        binding.monthYearText.text = yearMonthFromDate(LocalDate.now())
     }
 
     private fun dialogMonthClick(month: Int) {
         Log.d("click","click")
     }
 
-    private fun getFestivalList(date: LocalDate): LiveData<MutableList<FestivalDto>> {
+    private fun getFestivalList(date: LocalDate){
         val firstLocalDate = LocalDate.of(date.year, date.month, 1)
         val lastDay: Int = date.lengthOfMonth()
         val lastLocalDate = LocalDate.of(date.year, date.month, lastDay)
-        val festivalList = festivalViewModel.getFestival(firstLocalDate, lastLocalDate);
-        return festivalList
+        festivalViewModel.getFestival(firstLocalDate, lastLocalDate);
+
     }
 
     private fun setMonthView(festivalList : List<FestivalDto>) {
@@ -135,11 +125,10 @@ class MonthFragment(
 
 
         // 레이아웃 적용
-        recycelrView.layoutManager = manager
-
-        //어뎁터 적용
-        recycelrView.adapter = adapter
-
+        binding.monthRecycler.apply {
+            this.layoutManager = manager
+            this.adapter = adapter
+        }
     }
 
     private fun daysInMonthArray(date : LocalDate, festivalList: List<FestivalDto>) : MutableList<FestivalDayInfoDto?>{

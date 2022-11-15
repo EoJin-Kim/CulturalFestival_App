@@ -5,26 +5,21 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.ej.culturalfestival.MainActivity
 import com.ej.culturalfestival.adapter.ViewPagerAdapter
 import com.ej.culturalfestival.databinding.FragmentCalendarBinding
-import com.ej.culturalfestival.util.CalendarUtil
 import com.ej.culturalfestival.viewmodel.FestivalViewModel
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 
 class CalendarFagment : Fragment() {
     val act : MainActivity by lazy { activity as MainActivity }
     val festivalViewModel : FestivalViewModel by lazy { ViewModelProvider(act).get(FestivalViewModel::class.java) }
-    lateinit var calendarFagmentBinding : FragmentCalendarBinding
-    lateinit var viewPager : ViewPager2
+    lateinit var binding : FragmentCalendarBinding
 
     private val tabTitleArray = arrayOf(
         "일별",
@@ -32,25 +27,24 @@ class CalendarFagment : Fragment() {
         "월별"
     )
 
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        calendarFagmentBinding = FragmentCalendarBinding.inflate(LayoutInflater.from(container!!.context),container,false)
+        binding = FragmentCalendarBinding.inflate(LayoutInflater.from(container!!.context),container,false)
+        return binding.root
+    }
 
-        viewPager = calendarFagmentBinding.viewpager2
-        val tabLayout = calendarFagmentBinding.tabLayout
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+
+        val tabLayout = binding.tabLayout
 
         tabLayout.addOnTabSelectedListener(object :TabLayout.OnTabSelectedListener{
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                tab?.position?.let { viewPager.setCurrentItem(it,false) }
+                tab?.position?.let { binding.viewpager2.setCurrentItem(it,false) }
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {
@@ -62,19 +56,15 @@ class CalendarFagment : Fragment() {
         })
 
         val monthDayClickFun : (LocalDate) -> Unit = { date -> monthDayClick(date)}
-        viewPager.adapter = ViewPagerAdapter(act.supportFragmentManager,lifecycle,monthDayClickFun)
-        viewPager.isUserInputEnabled =false
-
+        binding.viewpager2.apply {
+            adapter = ViewPagerAdapter(act.supportFragmentManager,lifecycle,monthDayClickFun)
+            isUserInputEnabled =false
+        }
 //        viewPager.currentItem = 1
-
-
-        TabLayoutMediator(tabLayout,viewPager){ tab,position ->
+        TabLayoutMediator(tabLayout,binding.viewpager2){ tab,position ->
             tab.text = tabTitleArray[position]
         }.attach()
 
-
-
-        return calendarFagmentBinding.root
     }
 
     override fun onResume() {
@@ -84,9 +74,7 @@ class CalendarFagment : Fragment() {
 
     private fun monthDayClick(date: LocalDate) {
         festivalViewModel.setDayFragmentDate(date)
-        viewPager.currentItem = 0
-
-
+        binding.viewpager2.currentItem = 0
     }
 
 

@@ -26,7 +26,6 @@ class ViewPagerAdapter(
 
 
     override fun getItemCount(): Int {
-
         return fragList.size
     }
 

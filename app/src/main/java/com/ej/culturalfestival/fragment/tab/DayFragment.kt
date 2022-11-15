@@ -44,37 +44,36 @@ class DayFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        nowDayText = binding.nowDayText
-        nowDayText.text = monthDayFromDate(LocalDate.now())
+        drawUi()
 
         val dialogDayFun : (LocalDate) -> Unit = { date -> dialogDayClick(date)}
-        dayCalendarFragmentDialog = DayCalendarFragmentDialog.newInstance(
-            dialogDayFun
-        )
+        dayCalendarFragmentDialog = DayCalendarFragmentDialog.newInstance(dialogDayFun)
 
         binding.nowDayText.setOnClickListener {
             Log.d("click","click1")
             dayCalendarFragmentDialog.show(act.supportFragmentManager,"축제 정보")
         }
 
-        val dayFragmentDate = festivalViewModel.dayFragmentDate
-        dayFragmentDate.observe(viewLifecycleOwner){
+
+        festivalViewModel.dayFragmentDate.observe(viewLifecycleOwner){
             nowLocalDate = it
             val dateStr = monthDayFromDate(it)
             binding.nowDayText.text = dateStr
             getFestival(it)
         }
-        if(dayFragmentDate.value==null){
-            festivalViewModel.setDayFragmentDate(LocalDate.now())
-        }
+        festivalViewModel.setDayFragmentDate(LocalDate.now())
 
         binding.preDay.setOnClickListener {
-            movePreDay()
+            clickPreDay()
         }
 
         binding.nextDay.setOnClickListener {
-            moveNextDay()
+            clickNextDay()
         }
+    }
+
+    private fun drawUi() {
+        binding.nowDayText.text = monthDayFromDate(LocalDate.now())
     }
 
     private fun dialogDayClick(date :LocalDate){
@@ -88,7 +87,7 @@ class DayFragment : Fragment() {
         Log.d("click","$date")
     }
 
-    private fun movePreDay(){
+    private fun clickPreDay(){
         val moveDay = nowLocalDate.minusDays(1)
         festivalViewModel.setDayFragmentDate(moveDay)
         val dateStr = monthDayFromDate(moveDay)
@@ -98,7 +97,7 @@ class DayFragment : Fragment() {
         // 뷰모델에서 해당 날짜 축제 가지고 오로 submit
     }
 
-    private fun moveNextDay(){
+    private fun clickNextDay(){
         val moveDay = nowLocalDate.plusDays(1)
         festivalViewModel.setDayFragmentDate(moveDay)
         val dateStr = monthDayFromDate(moveDay)

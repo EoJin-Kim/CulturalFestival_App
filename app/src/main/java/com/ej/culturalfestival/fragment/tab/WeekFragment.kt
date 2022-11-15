@@ -42,87 +42,80 @@ class WeekFragment : Fragment() {
     lateinit var weekCalendarFragmentDialog : WeekCalendarFragmentDialog
     lateinit var nowWeek : WeekInfoDto;
 
-
-    lateinit var recycler : RecyclerView
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentWeekBinding.inflate(inflater,container,false)
+        return binding.root
+    }
 
-        val preBtn : Button = binding.preWeek
-        val nextBtn : Button = binding.nextWeek
-        val weekText : TextView = binding.weekTitle
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         nowWeek = CalendarUtil.setDayWeek(LocalDate.now())
         festivalViewModel.setWeekFragmentDate(nowWeek)
+        drawUi()
 
         val dialogWeekFun : (StartEndDate,Int) -> Unit = { startEndDate ,position-> dialogWeekClick(startEndDate,position)}
         weekCalendarFragmentDialog = WeekCalendarFragmentDialog.newInstance(
             dialogWeekFun
         )
-        weekText.setOnClickListener {
+        binding.weekTitle.setOnClickListener {
             weekCalendarFragmentDialog.show(act.supportFragmentManager,"달력")
         }
-        recycler = binding.weekRecycler
-        preBtn.setOnClickListener {
-            nowWeek = movePreOneWeek(nowWeek)
-            festivalViewModel.setWeekFragmentDate(nowWeek)
-            weekText.text = setWeekTitleText(nowWeek)
 
-            val result = festivalViewModel.getFestival(
-                nowWeek.startEndDateList[nowWeek.weekRow-1].startDate,
-                nowWeek.startEndDateList[nowWeek.weekRow-1].endDate
-            )
-            result.observe(viewLifecycleOwner){
-                setWeekView(it)
-            }
+        binding.preWeek.setOnClickListener {
+            clickPreBtn()
         }
 
-        nextBtn.setOnClickListener {
-            nowWeek = moveNextOneWeek(nowWeek)
-            festivalViewModel.setWeekFragmentDate(nowWeek)
-            weekText.text = setWeekTitleText(nowWeek)
-            val result = festivalViewModel.getFestival(
-                nowWeek.startEndDateList[nowWeek.weekRow-1].startDate,
-                nowWeek.startEndDateList[nowWeek.weekRow-1].endDate
-            )
-
-            result.observe(viewLifecycleOwner){
-                setWeekView(it)
-            }
+        binding.nextWeek.setOnClickListener {
+            clickNextBtn()
         }
-        weekText.text = setWeekTitleText(nowWeek)
 
-        val result = festivalViewModel.getFestival(
-            nowWeek.startEndDateList[nowWeek.weekRow-1].startDate,
-            nowWeek.startEndDateList[nowWeek.weekRow-1].endDate)
-        result.observe(viewLifecycleOwner){
+        festivalViewModel.festivalSearchResult.observe(viewLifecycleOwner){
             setWeekView(it)
         }
+        festivalViewModel.getFestival(
+            nowWeek.startEndDateList[nowWeek.weekRow-1].startDate,
+            nowWeek.startEndDateList[nowWeek.weekRow-1].endDate
+        )
 
-
-        return binding.root
     }
+
+    private fun clickNextBtn() {
+        nowWeek = moveNextOneWeek(nowWeek)
+        festivalViewModel.setWeekFragmentDate(nowWeek)
+        binding.weekTitle.text = setWeekTitleText(nowWeek)
+        festivalViewModel.getFestival(
+            nowWeek.startEndDateList[nowWeek.weekRow - 1].startDate,
+            nowWeek.startEndDateList[nowWeek.weekRow - 1].endDate
+        )
+    }
+
+    private fun clickPreBtn() {
+        nowWeek = movePreOneWeek(nowWeek)
+        festivalViewModel.setWeekFragmentDate(nowWeek)
+        binding.weekTitle.text = setWeekTitleText(nowWeek)
+
+        festivalViewModel.getFestival(
+            nowWeek.startEndDateList[nowWeek.weekRow - 1].startDate,
+            nowWeek.startEndDateList[nowWeek.weekRow - 1].endDate
+        )
+    }
+
+    private fun drawUi() {
+        binding.weekTitle.text = setWeekTitleText(nowWeek)
+    }
+
     private fun dialogWeekClick(startEndDate: StartEndDate, position : Int) {
         Log.d("click","click")
         Log.d("click","${startEndDate.startDate} ~ ${startEndDate.endDate}")
         binding.weekTitle.text = CalendarUtil.setWeekTitleText(position, startEndDate)
         nowWeek = CalendarUtil.setDayWeek(startEndDate)
         festivalViewModel.setWeekFragmentDate(nowWeek)
-
-        val result = festivalViewModel.getFestival(startEndDate.startDate,startEndDate.endDate)
-        result.observe(viewLifecycleOwner){
-            setWeekView(it)
-        }
+        festivalViewModel.getFestival(startEndDate.startDate,startEndDate.endDate)
     }
 
 
@@ -179,6 +172,13 @@ class WeekFragment : Fragment() {
     private fun setWeekView(festivalList : MutableList<FestivalDto>){
         val dayList = daysInWeekArray(nowWeek,festivalList)
 
+        festivalViewModel.festivalOne.observe(viewLifecycleOwner){
+            val festivalDetailDto = FestivalDetailDto(it)
+            val funUrlOpen : (String) -> Unit =  { url -> urlOpen(url) }
+            val dialog = FestivalFragmentDialog.newInstance(festivalDetailDto,funUrlOpen)
+            dialog.show(act.supportFragmentManager,"축제 정보")
+        }
+
         val funFestivalClickVal : (Long) -> Unit = {id -> festivalClickEvent(id)}
         val adapter = WeekCalendarAdapter(requireContext(),funFestivalClickVal)
         adapter.submitList(dayList)
@@ -186,8 +186,10 @@ class WeekFragment : Fragment() {
         val manager : RecyclerView.LayoutManager = LinearLayoutManager(requireContext())
         val weekRecycler = binding.weekRecycler
 
-        weekRecycler.adapter = adapter
-        weekRecycler.layoutManager = manager
+        weekRecycler.apply {
+            this.adapter = adapter
+            layoutManager = manager
+        }
 
     }
 
@@ -199,14 +201,7 @@ class WeekFragment : Fragment() {
 
 
     private fun festivalClickEvent(id : Long){
-        val result = festivalViewModel.getFestival(id)
-        result.observe(viewLifecycleOwner){
-            val festivalDetailDto = FestivalDetailDto(it)
-            val funUrlOpen : (String) -> Unit =  { url -> urlOpen(url) }
-            val dialog = FestivalFragmentDialog.newInstance(festivalDetailDto,funUrlOpen)
-            dialog.show(act.supportFragmentManager,"축제 정보")
-        }
-
+        festivalViewModel.getFestival(id)
     }
     private fun urlOpen(url : String){
 

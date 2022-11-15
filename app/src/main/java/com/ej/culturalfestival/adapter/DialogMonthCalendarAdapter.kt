@@ -30,9 +30,13 @@ class DialogMonthCalendarAdapter(
         holder.bind(month,position)
     }
 
-    class MonthCalendarViewHolder(itemView : View, private val monthCalendarFragmentDialog : MonthCalendarFragmentDialog, private val onClick : (Int) -> Unit,): RecyclerView.ViewHolder(itemView){
-        val monthText : TextView = itemView.findViewById(R.id.dialog_month)
+    class MonthCalendarViewHolder(
+        val itemView : View,
+        val monthCalendarFragmentDialog : MonthCalendarFragmentDialog,
+        private val onClick : (Int) -> Unit,
+    ) : RecyclerView.ViewHolder(itemView) {
 
+        val monthText : TextView = itemView.findViewById(R.id.dialog_month)
         fun bind(month: Int, position: Int) {
             monthText.text = "${month}월"
 

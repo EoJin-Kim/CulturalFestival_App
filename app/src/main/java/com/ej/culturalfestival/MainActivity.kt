@@ -29,11 +29,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        uiDraw()
+        drawUi()
         setFragment(CalendarFagment.TAG)
     }
 
-    private fun uiDraw() {
+    private fun drawUi() {
         val toolbar = binding.toolbar
         toolbar.title = "축제 검색"
         val color = ContextCompat.getColor(this, R.color.main_green)

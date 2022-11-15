@@ -44,18 +44,17 @@ class DayCalendarFragmentDialog(
         super.onViewCreated(view, savedInstanceState)
 
         dialogDayDate = festivalViewModel.dayFragmentDate.value!!
-        uiDraw()
+        drawUi()
         binding.dialogDayPreBtn.setOnClickListener {
             dayPreButtonClick()
         }
-
         binding.dialogDayNextBtn.setOnClickListener {
             dayNextButtonClick()
         }
 
     }
 
-    private fun uiDraw() {
+    private fun drawUi() {
         binding.dialogDayDateText.text = yearMonthFromDate(dialogDayDate)
         setRecycler(festivalViewModel.dayFragmentDate.value!!)
     }

@@ -23,9 +23,6 @@ class WeekCalendarAdapter(
    private val onClick : (Long) -> Unit,
 ) : ListAdapter<FestivalWeekInfoDto, WeekCalendarAdapter.WeekCalendarViewHolder>(WeekCalendarDiffCallback) {
 
-
-
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeekCalendarViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.row_week_item,parent,false)

@@ -13,4 +13,6 @@
     <color name="main_green">#1A7D36</color>
     <color name="main_light_green">#B5F3C7</color>
     <color name="main_white_green">#F1FCF4</color>
+    <color name="main_blue">#FF0000FF</color>
+    <color name="main_red">#FFFF0000</color>
 </resources>

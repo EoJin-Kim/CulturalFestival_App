@@ -38,5 +38,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/dialog_week_recycler"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        tools:itemCount="5"
+        tools:listitem="@layout/card_week_calendar" />
 </LinearLayout>
